@@ -1,65 +1,102 @@
-import Image from "next/image";
-
 export default function Home() {
+  const portfolioItems = [
+    { id: 1, title: "Project Alpha", category: "Web Development", description: "Modern web application with Next.js" },
+    { id: 2, title: "Project Beta", category: "UI/UX Design", description: "Minimalist portfolio design" },
+    { id: 3, title: "Project Gamma", category: "Mobile App", description: "Cross-platform mobile solution" },
+    { id: 4, title: "Project Delta", category: "Branding", description: "Complete brand identity system" },
+    { id: 5, title: "Project Epsilon", category: "E-commerce", description: "Full-stack online store" },
+    { id: 6, title: "Project Zeta", category: "Data Visualization", description: "Interactive dashboard design" },
+  ];
+
+  const socialLinks = [
+    { name: "GitHub", url: "https://github.com", icon: "💻" },
+    { name: "LinkedIn", url: "https://linkedin.com", icon: "💼" },
+    { name: "Twitter", url: "https://twitter.com", icon: "🐦" },
+    { name: "Instagram", url: "https://instagram.com", icon: "📸" },
+    { name: "Email", url: "mailto:hello@example.com", icon: "✉️" },
+  ];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
+    <div className="bg-[#1a1a1a] text-[#e5e5e5]">
+      {/* Section 1: Introduction/Hero */}
+      <section className="min-h-screen flex items-center justify-center px-6 md:px-12">
+        <div className="max-w-4xl w-full fade-in-up">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+            Hello, I&apos;m <span className="text-[#9ca3af]">Your Name</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xl md:text-2xl text-[#9ca3af] mb-4">
+            Creative Developer & Designer
           </p>
+          <p className="text-lg text-[#6b7280] max-w-2xl leading-relaxed">
+            I craft beautiful digital experiences with a focus on clean design,
+            intuitive interfaces, and modern web technologies. Passionate about
+            turning ideas into reality.
+          </p>
+          <div className="mt-12">
+            <a
+              href="#portfolio"
+              className="inline-block px-8 py-4 bg-[#2a2a2a] hover:bg-[#3a3a3a] transition-all duration-300 rounded-lg text-[#e5e5e5] font-medium"
+            >
+              View My Work ↓
+            </a>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Section 2: Portfolio Grid */}
+      <section id="portfolio" className="min-h-screen py-20 px-6 md:px-12 bg-[#1f1f1f]">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
+            Portfolio
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {portfolioItems.map((item) => (
+              <div
+                key={item.id}
+                className="bg-[#2a2a2a] rounded-lg p-6 hover:bg-[#3a3a3a] transition-all duration-300 hover:transform hover:scale-105 cursor-pointer group"
+              >
+                <div className="aspect-video bg-[#3a3a3a] rounded-md mb-4 flex items-center justify-center text-4xl group-hover:bg-[#4a4a4a] transition-colors duration-300">
+                  📁
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                <p className="text-sm text-[#9ca3af] mb-3">{item.category}</p>
+                <p className="text-[#6b7280] text-sm">{item.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Section 3: Social Media */}
+      <section id="social" className="min-h-screen flex items-center justify-center px-6 md:px-12 bg-[#1a1a1a]">
+        <div className="max-w-4xl w-full text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8">
+            Let&apos;s Connect
+          </h2>
+          <p className="text-lg text-[#9ca3af] mb-12 max-w-2xl mx-auto">
+            Feel free to reach out for collaborations, opportunities, or just to say hello!
+          </p>
+          <div className="flex flex-wrap justify-center gap-6 mb-12">
+            {socialLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center justify-center w-32 h-32 bg-[#2a2a2a] hover:bg-[#3a3a3a] rounded-lg transition-all duration-300 hover:transform hover:scale-110 group"
+              >
+                <span className="text-4xl mb-2 group-hover:scale-125 transition-transform duration-300">
+                  {link.icon}
+                </span>
+                <span className="text-sm text-[#9ca3af]">{link.name}</span>
+              </a>
+            ))}
+          </div>
+          <div className="text-[#6b7280] text-sm">
+            <p>© 2026 Your Name. All rights reserved.</p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
