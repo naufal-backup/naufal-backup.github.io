@@ -6,6 +6,7 @@ import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMousePointer } fro
 export default function GameClient({ slug }) {
     const iframeRef = useRef(null);
     const [isMobile, setIsMobile] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false); // New state to track if iframe loaded
 
     useEffect(() => {
         const checkMobile = () => {
@@ -81,10 +82,12 @@ export default function GameClient({ slug }) {
 
     return (
         <div className="w-full h-screen bg-black flex items-center justify-center relative">
-            {/* Loading indicator */}
-            <div className="absolute inset-0 flex items-center justify-center bg-black z-10 pointer-events-none">
-                <div className="text-white text-xl">Loading game...</div>
-            </div>
+            {/* Loading indicator - Show until loaded */}
+            {!isLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black z-10 pointer-events-none">
+                    <div className="text-white text-xl animate-pulse">Loading game resources...</div>
+                </div>
+            )}
 
             <iframe
                 ref={iframeRef}
@@ -93,15 +96,16 @@ export default function GameClient({ slug }) {
                 title={slug}
                 loading="eager"
                 onLoad={(e) => {
-                    // Hide loading indicator logic could be improved here by removing the div above via state
-                    e.target.previousSibling.style.display = 'none';
-                    // Focus the iframe so it receives input
+                    setIsLoaded(true);
+                    // Attempt to inject style to hide default Godot splash if it persists, 
+                    // though we depend on it for loading progress initially.
+                    // We just focus here.
                     e.target.contentWindow.focus();
                 }}
             />
 
             {/* Mobile Controls Overlay */}
-            {isMobile && (
+            {isLoaded && isMobile && (
                 <div className="absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-20 px-6">
                     <div className="flex justify-between items-end w-full pointer-events-auto">
                         {/* D-Pad (WASD) */}
@@ -147,7 +151,7 @@ export default function GameClient({ slug }) {
                         </div>
 
                         {/* Action Button (Left Click) */}
-                        <button
+                        {/* <button
                             className="w-20 h-20 bg-red-500/50 backdrop-blur-md rounded-full flex items-center justify-center active:bg-red-500/70 touch-none select-none"
                             onTouchStart={() => simulateClick("mousedown")}
                             onTouchEnd={() => {
@@ -161,7 +165,7 @@ export default function GameClient({ slug }) {
                             }}
                         >
                             <FaMousePointer className="text-white text-2xl" />
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             )}
