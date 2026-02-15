@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FaGithub, FaLinkedin, FaInstagram, FaChevronDown } from 'react-icons/fa';
+import { SiLaravel, SiMysql, SiBootstrap, SiTailwindcss, SiGodotengine, SiJavascript, SiGtk, SiGnubash, SiNextdotjs, SiUnity } from 'react-icons/si';
 import { CgMail } from 'react-icons/cg';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -16,10 +17,27 @@ export default function Home() {
         { id: 2, title: "Ruang Santri", category: "Website for Education", description: "Made with Laravel, MySQL, Bootstrap, and Tailwind CSS", url: "https://ruang-santri.com/", image: "/images/ruang-santri.png" },
         { id: 3, title: "Project-A", category: "Action Top-Down Web Game", description: "Made with Godot Engine", url: "/portfolio/project-a", image: "/images/project-a.png" },
         { id: 4, title: "GTK Theme Customizer", category: "GTK Window Customization", description: "Made with Javascript, GTK, and Linux Shell Script", url: "https://github.com/naufal-backup/Gtk-Theme-Customizer",image: "/images/gtk-theme-customizer.png" },
-        { id: 5, title: "Project Epsilon", category: "E-commerce", description: "Full-stack online store" },
-        { id: 6, title: "Project Zeta", category: "Data Visualization", description: "Interactive dashboard design" },
+        { id: 5, title: "This Page", category: "Portfolio Website", description: "Made with Next.js, Tailwind CSS, and Framer Motion", url: "https://naufal-backup.github.io", image:"/images/this-page.png" },
+        { id: 6, title: "Waste Sorter", category: "Educational Game", description: "Made with Unity2D", url: "https://github.com/naufal-backup/Waste-Sorter", image: "/images/waste-sorter.png" },
     ];
 
+    const stackWeb = [
+        { name: "Laravel", icon: <SiLaravel size={24} className="text-[#FF2D20]" /> },
+        { name: "MySQL", icon: <SiMysql size={24} className="text-[#4479A1]" /> },
+        { name: "Bootstrap", icon: <SiBootstrap size={24} className="text-[#7952B3]" /> },
+        { name: "Tailwind CSS", icon: <SiTailwindcss size={24} className="text-[#06B6D4]" /> },
+        // { name: "Javascript", icon: <SiJavascript size={24} className="text-[#F7DF1E]" /> },
+        { name: "Next.js", icon: <SiNextdotjs size={24} className="text-white" /> },
+    ];
+    const stackGame = [
+        { name: "Godot Engine", icon: <SiGodotengine size={24} className="text-[#478CBF]" /> },
+        { name: "Javascript", icon: <SiJavascript size={24} className="text-[#F7DF1E]" /> },
+        { name: "Unity2D", icon: <SiUnity size={24} className="text-[#478CBF]" /> },
+    ];
+    const stackDesktop = [
+        { name: "GTK", icon: <SiGtk size={24} className="text-[#89d53c]" /> },
+        { name: "Linux Shell Script", icon: <SiGnubash size={24} className="text-[#4EAA25]" /> },
+    ];
     const livePreviewItems = portfolioItems.filter(item => !item.url || !item.url.includes("github.com"));
     const githubItems = portfolioItems.filter(item => item.url && item.url.includes("github.com"));
 
@@ -36,8 +54,8 @@ export default function Home() {
             {/* Section 1: Introduction/Hero */}
             <section className="min-h-screen flex items-center justify-center px-6 md:px-12">
                 <div className="max-w-4xl w-full fade-in-up">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-                        Hello, I&apos;m <span className="text-[#9ca3af] inline-flex items-center flex-wrap">
+                    <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-[#9ca3af]">
+                        Hello, I&apos;m <span className="text-[#e5e5e5] inline-flex items-center flex-wrap">
                             <span className="mr-2">Naufal</span>
                             <AnimatePresence>
                                 {isExpanded && (
@@ -90,8 +108,63 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Section 2: Portfolio Grid */}
-            <section id="portfolio" className="min-h-screen py-20 px-6 md:px-12 bg-[#1f1f1f]">
+            {/* Section 2: Stack */}
+            <section id="stack" className="py-12 px-6 md:px-12 bg-[#1f1f1f]">
+                <div className="max-w-6xl mx-auto">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
+                        Stack
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        {/* Web Development Stack */}
+                        <div className="bg-[#2a2a2a] p-6 rounded-lg">
+                            <h3 className="text-xl font-bold mb-6 text-[#9ca3af]">Web Development</h3>
+                            <div className="flex flex-wrap justify-center gap-4">
+                                {stackWeb.map((item) => (
+                                    <div key={item.name} className="flex flex-col items-center group cursor-pointer relative">
+                                        <div className="w-12 h-12 bg-[#3a3a3a] rounded-full flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
+                                            {item.icon}
+                                        </div>
+                                        <span className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity absolute top-14 bg-black/80 px-2 py-1 rounded whitespace-nowrap z-10">{item.name}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Game Development Stack */}
+                        <div className="bg-[#2a2a2a] p-6 rounded-lg">
+                            <h3 className="text-xl font-bold mb-6 text-[#9ca3af]">Game Development</h3>
+                            <div className="flex flex-wrap justify-center gap-4">
+                                {stackGame.map((item) => (
+                                    <div key={item.name} className="flex flex-col items-center group cursor-pointer relative">
+                                        <div className="w-12 h-12 bg-[#3a3a3a] rounded-full flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
+                                            {item.icon}
+                                        </div>
+                                        <span className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity absolute top-14 bg-black/80 px-2 py-1 rounded whitespace-nowrap z-10">{item.name}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Desktop App Stack */}
+                        <div className="bg-[#2a2a2a] p-6 rounded-lg">
+                            <h3 className="text-xl font-bold mb-6 text-[#9ca3af]">Desktop App</h3>
+                            <div className="flex flex-wrap justify-center gap-4">
+                                {stackDesktop.map((item) => (
+                                    <div key={item.name} className="flex flex-col items-center group cursor-pointer relative">
+                                        <div className="w-12 h-12 bg-[#3a3a3a] rounded-full flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
+                                            {item.icon}
+                                        </div>
+                                        <span className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity absolute top-14 bg-black/80 px-2 py-1 rounded whitespace-nowrap z-10">{item.name}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section 3: Portfolio Grid */}
+            <section id="portfolio" className="min-h-screen py-12 px-6 md:px-12 bg-[#1f1f1f]">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
                         Portfolio
@@ -174,7 +247,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Section 3: Social Media */}
+            {/* Section 4: Social Media */}
             <section id="social" className="min-h-screen flex items-center justify-center px-6 md:px-12 bg-[#1a1a1a]">
                 <div className="max-w-4xl w-full text-center">
                     <h2 className="text-4xl md:text-5xl font-bold mb-8">
