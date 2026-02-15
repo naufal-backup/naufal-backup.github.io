@@ -15,7 +15,7 @@
 
 # next.js
 /.next/
-# /out/  ← HAPUS BARIS INI! atau comment seperti ini
+/out/  
 
 # production
 /build
