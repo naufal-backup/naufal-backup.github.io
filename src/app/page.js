@@ -4,7 +4,7 @@ export const metadata = {
 
 export default function Home() {
   const portfolioItems = [
-    { id: 1, title: "Alternate Arc Archive", category: "Web Development", description: "Fan-made website for Alternate Arc", url: "https://github.com/naufal-backup/Alternate-Arc-Archive3" },
+    { id: 1, title: "Alternate Arc Archive", category: "Web Development", description: "Fan-made website for Alternate Arc", url: "https://github.com/naufal-backup/Alternate-Arc-Archive3", image: "/images/alternate-arc-archive.png" },
     { id: 2, title: "Project Beta", category: "UI/UX Design", description: "Minimalist portfolio design" },
     { id: 3, title: "Project Gamma", category: "Mobile App", description: "Cross-platform mobile solution" },
     { id: 4, title: "Project Delta", category: "Branding", description: "Complete brand identity system" },
