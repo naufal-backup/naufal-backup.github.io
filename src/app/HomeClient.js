@@ -1,19 +1,21 @@
 "use client";
 
 import { useState } from 'react';
-import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaInstagram, FaChevronDown } from 'react-icons/fa';
 import { CgMail } from 'react-icons/cg';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
     const [showGithubPopup, setShowGithubPopup] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleGithubPopup = () => setShowGithubPopup(!showGithubPopup);
 
     const portfolioItems = [
-        { id: 1, title: "Alternate Arc Archive", category: "Web Development", description: "Fan-made website for Alternate Arc", url: "https://github.com/naufal-backup/Alternate-Arc-Archive3", image: "/images/alternate-arc-archive.png" },
-        { id: 2, title: "Ruang Santri", category: "Web Development", description: "Website for Education", url: "https://ruang-santri.com/", image: "/images/ruang-santri.png" },
-        { id: 3, title: "Project-A", category: "Web Game", description: "Web Game", url: "/portfolio/project-a", image: "/images/project-a.png" },
-        { id: 4, title: "Project Delta", category: "Branding", description: "Complete brand identity system" },
+        { id: 1, title: "Alternate Arc Archive", category: "Fan-made website for Alternate Arc", description: "Made with Laravel, MySQL, and Bootstrap", url: "https://github.com/naufal-backup/Alternate-Arc-Archive3", image: "/images/alternate-arc-archive.png" },
+        { id: 2, title: "Ruang Santri", category: "Website for Education", description: "Made with Laravel, MySQL, Bootstrap, and Tailwind CSS", url: "https://ruang-santri.com/", image: "/images/ruang-santri.png" },
+        { id: 3, title: "Project-A", category: "Action Top-Down Web Game", description: "Made with Godot Engine", url: "/portfolio/project-a", image: "/images/project-a.png" },
+        { id: 4, title: "GTK Theme Customizer", category: "GTK Window Customization", description: "Made with Javascript, GTK, and Linux Shell Script", url: "https://github.com/naufal-backup/Gtk-Theme-Customizer",image: "/images/gtk-theme-customizer.png" },
         { id: 5, title: "Project Epsilon", category: "E-commerce", description: "Full-stack online store" },
         { id: 6, title: "Project Zeta", category: "Data Visualization", description: "Interactive dashboard design" },
     ];
@@ -34,8 +36,40 @@ export default function Home() {
             {/* Section 1: Introduction/Hero */}
             <section className="min-h-screen flex items-center justify-center px-6 md:px-12">
                 <div className="max-w-4xl w-full fade-in-up">
-                    <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-                        Hello, I&apos;m <span className="text-[#9ca3af]">Naufal</span>
+                    <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+                        Hello, I&apos;m <span className="text-[#9ca3af] inline-flex items-center flex-wrap">
+                            <span className="mr-2">Naufal</span>
+                            <AnimatePresence>
+                                {isExpanded && (
+                                    <motion.span
+                                        initial={{ width: 0, opacity: 0, marginRight: 0 }}
+                                        animate={{ width: "auto", opacity: 1, marginRight: "0.5rem" }}
+                                        exit={{ width: 0, opacity: 0, marginRight: 0 }}
+                                        transition={{ 
+                                            width: { type: "spring", stiffness: 120, damping: 20 },
+                                            opacity: { duration: 0.9 },
+                                            marginRight: { duration: 0.9 }
+                                        }}
+                                        className="overflow-hidden whitespace-nowrap"
+                                    >
+                                        Gastiadirrijal Fawwaz
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                            <span>Alamsyah</span>
+                            <button 
+                                onClick={() => setIsExpanded(!isExpanded)} 
+                                className="text-2xl md:text-3xl hover:text-white transition-colors focus:outline-none ml-2"
+                                aria-label={isExpanded ? "Collapse name" : "Expand name"}
+                            >
+                                <motion.div
+                                    animate={{ rotate: isExpanded ? 180 : 0 }}
+                                    transition={{ type: "spring", stiffness: 120, damping: 15 }}
+                                >
+                                    <FaChevronDown className="w-6 h-6" />
+                                </motion.div>
+                            </button>
+                        </span>
                     </h1>
                     <p className="text-xl md:text-2xl text-[#9ca3af] mb-4">
                         Frontend Developer, UI/UX Designer, Junior Game Developer
