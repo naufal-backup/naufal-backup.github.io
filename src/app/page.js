@@ -1,3 +1,7 @@
+export const metadata = {
+  title: "Naufal",
+};
+
 export default function Home() {
   const portfolioItems = [
     { id: 1, title: "Project Alpha", category: "Web Development", description: "Modern web application with Next.js" },
@@ -17,6 +21,7 @@ export default function Home() {
   ];
 
   return (
+
     <div className="bg-[#1a1a1a] text-[#e5e5e5]">
       {/* Section 1: Introduction/Hero */}
       <section className="min-h-screen flex items-center justify-center px-6 md:px-12">
