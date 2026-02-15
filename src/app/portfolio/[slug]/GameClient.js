@@ -19,44 +19,64 @@ export default function GameClient({ slug }) {
     const simulateKey = (key, type) => {
         if (!iframeRef.current || !iframeRef.current.contentWindow) return;
 
+        const canvas = iframeRef.current.contentWindow.document.getElementById("canvas");
+        if (!canvas) return;
+
+        // Focus canvas to ensure it receives input
+        canvas.focus();
+
         const keyCodeMap = {
             w: 87,
             a: 65,
             s: 83,
             d: 68,
-            " ": 32, // Space
+            " ": 32,
+        };
+
+        const codeMap = {
+            w: "KeyW",
+            a: "KeyA",
+            s: "KeyS",
+            d: "KeyD",
+            " ": "Space"
         };
 
         const keyCode = keyCodeMap[key.toLowerCase()];
+        const code = codeMap[key.toLowerCase()];
 
-        const event = new KeyboardEvent(type, {
+        const eventObj = {
             key: key,
-            code: `Key${key.toUpperCase()}`,
+            code: code,
             keyCode: keyCode,
             which: keyCode,
             bubbles: true,
             cancelable: true,
+            composed: true,
             view: iframeRef.current.contentWindow,
-        });
+        };
 
-        iframeRef.current.contentWindow.document.dispatchEvent(event);
+        const event = new KeyboardEvent(type, eventObj);
+        canvas.dispatchEvent(event);
     };
 
     const simulateClick = (type) => {
         if (!iframeRef.current || !iframeRef.current.contentWindow) return;
 
-        // Simulate click at the center of the screen or canvas if possible
-        // For now, disptach to the document body or canvas
-        const target = iframeRef.current.contentWindow.document.body; // or canvas if found
+        const canvas = iframeRef.current.contentWindow.document.getElementById("canvas");
+        if (!canvas) return;
+
+        canvas.focus();
 
         const event = new MouseEvent(type, {
             view: iframeRef.current.contentWindow,
             bubbles: true,
             cancelable: true,
             buttons: 1,
+            clientX: canvas.width / 2, // Center of canvas
+            clientY: canvas.height / 2,
         });
 
-        target.dispatchEvent(event);
+        canvas.dispatchEvent(event);
     };
 
     return (
