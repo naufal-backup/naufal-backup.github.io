@@ -40,9 +40,9 @@ export default function FirstSection() {
     return (
             <section className="min-h-screen flex items-center justify-center px-6 md:px-12">
                 <div className="max-w-4xl w-full fade-in-up">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-[#9ca3af]">
+                    <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-[#9ca3af]">
                         Hello, I&apos;m <span className="text-[#e5e5e5] inline-flex items-center flex-wrap">
-                            <span className="mr-2">Naufal</span>
+                            <h2 className="mr-2">Naufal</h2>
                             <AnimatePresence>
                                 {isExpanded && (
                                     <motion.span
@@ -60,7 +60,7 @@ export default function FirstSection() {
                                     </motion.span>
                                 )}
                             </AnimatePresence>
-                            <span>Alamsyah</span>
+                            <h2 >Alamsyah</h2>
                             <button 
                                 onClick={() => setIsExpanded(!isExpanded)} 
                                 className="text-2xl md:text-3xl hover:text-white transition-colors focus:outline-none ml-2"
@@ -74,7 +74,7 @@ export default function FirstSection() {
                                 </motion.div>
                             </button>
                         </span>
-                    </h1>
+                    </h2>
                     <p className="text-xl md:text-2xl text-[#9ca3af] mb-4">
                         Frontend Developer, UI/UX Designer, Junior Game Developer
                     </p>
