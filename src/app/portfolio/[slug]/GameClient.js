@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMousePointer } from "react-icons/fa";
 
 export default function GameClient({ slug }) {
@@ -82,6 +83,14 @@ export default function GameClient({ slug }) {
 
     return (
         <div className="w-full h-screen bg-black flex items-center justify-center relative">
+            {/* Back Button */}
+            <Link 
+                href="/" 
+                className="absolute top-4 left-4 z-50 w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-all"
+                title="Back to Home"
+            >
+                <FaArrowLeft size={18} />
+            </Link>
             {/* Loading indicator - Show until loaded */}
             {!isLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black z-10 pointer-events-none">
@@ -107,7 +116,13 @@ export default function GameClient({ slug }) {
             {/* Mobile Controls Overlay */}
             {isLoaded && isMobile && (
                 <div className="absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-20 px-6">
-                    <div className="flex justify-between items-end w-full pointer-events-auto">
+                    <div 
+                        className="flex items-end pointer-events-auto w-fit" 
+                        onContextMenu={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}
+                    >
                         {/* D-Pad (WASD) */}
                         <div className="grid grid-cols-3 gap-2">
                             <div />
