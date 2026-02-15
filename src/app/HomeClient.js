@@ -12,7 +12,14 @@ export default function Home() {
     const portfolioItems = [
         { id: 1, title: "Alternate Arc Archive", category: "Web Development", description: "Fan-made website for Alternate Arc", url: "https://github.com/naufal-backup/Alternate-Arc-Archive3", image: "/images/alternate-arc-archive.png" },
         { id: 2, title: "Ruang Santri", category: "Web Development", description: "Website for Education", url: "https://ruang-santri.com/", image: "/images/ruang-santri.png" },
-        { id: 3, title: "Project Gamma", category: "Mobile App", description: "Cross-platform mobile solution" },
+        {
+            id: 3,
+            title: "Project-A",
+            category: "Web Game",
+            description: "Web Game",
+            url: "/portfolio/project-a",  // ← URL internal
+            image: "/images/project-a.png"
+        },
         { id: 4, title: "Project Delta", category: "Branding", description: "Complete brand identity system" },
         { id: 5, title: "Project Epsilon", category: "E-commerce", description: "Full-stack online store" },
         { id: 6, title: "Project Zeta", category: "Data Visualization", description: "Interactive dashboard design" },
