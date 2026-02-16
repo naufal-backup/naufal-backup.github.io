@@ -24,7 +24,7 @@ export default function SecondSection() {
     return (
     <section id="stack" className="py-12 px-6 md:px-12 bg-[#1f1f1f]">
                 <div className="max-w-6xl mx-auto">
-                    <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center text-[#9ca3af]">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center text-white">
                         <WavyText text="Stack" />
                     </h2>
 
@@ -32,7 +32,7 @@ export default function SecondSection() {
                          {/* Web Dev Column */}
                         <div>
                              <h3 className="text-xl font-semibold mb-6 text-center text-[#e5e5e5] border-b border-[#333] pb-2">
-                                <WavyText text="Web Development" />
+                                <WavyText text="Web Development" className='text-[#9ca3af]' />
                              </h3>
                              <div className="flex flex-wrap justify-center gap-4">
                                 {stackWeb.map((tech) => (
@@ -49,7 +49,7 @@ export default function SecondSection() {
                         {/* Game Dev Column */}
                         <div>
                             <h3 className="text-xl font-semibold mb-6 text-center text-[#e5e5e5] border-b border-[#333] pb-2">
-                                <WavyText text="Game Development" />
+                                <WavyText text="Game Development" className='text-[#9ca3af]' />
                             </h3>
                             <div className="flex flex-wrap justify-center gap-4">
                                  {stackGame.map((tech) => (
@@ -66,7 +66,7 @@ export default function SecondSection() {
                          {/* Desktop App Column */}
                          <div>
                             <h3 className="text-xl font-semibold mb-6 text-center text-[#e5e5e5] border-b border-[#333] pb-2">
-                                <WavyText text="Desktop App" />
+                                <WavyText text="Desktop App" className='text-[#9ca3af]' />
                             </h3>
                              <div className="flex flex-wrap justify-center gap-4">
                                 {stackDesktop.map((tech) => (
