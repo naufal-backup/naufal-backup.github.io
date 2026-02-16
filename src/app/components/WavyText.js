@@ -43,6 +43,8 @@ const WavyText = ({ text, className = "" }) => {
         className={`inline-block ${className}`}
         initial="hidden"
         animate="visible"
+        whileTap="hover"
+        whileHover="hover"
         variants={container}
     >
       {letters.map((letter, index) => (
@@ -50,7 +52,6 @@ const WavyText = ({ text, className = "" }) => {
             variants={child} 
             key={index} 
             className="inline-block"
-            whileHover="hover"
         >
           {letter === " " ? "\u00A0" : letter}
         </motion.span>
