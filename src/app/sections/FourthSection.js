@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaGithub, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTiktok } from "react-icons/fa";
+import WavyText from '../components/WavyText';
 
 const socialLinks = [
     { name: "GitHub", url: "#", icon: <FaGithub /> },
@@ -19,10 +20,10 @@ export default function FourthSection() {
         <section id="social" className="min-h-screen flex items-center justify-center px-6 md:px-12 bg-[#1a1a1a]">
                 <div className="max-w-4xl w-full text-center">
                     <h2 className="text-4xl md:text-5xl font-bold mb-8">
-                        Let&apos;s Connect
+                        <WavyText text="Let's Connect" />
                     </h2>
                     <p className="text-lg text-[#9ca3af] mb-12 max-w-2xl mx-auto">
-                        Feel free to reach out for collaborations, opportunities, or just to say hello!
+                        <WavyText text="Feel free to reach out for collaborations, opportunities, or just to say hello!" />
                     </p>
                     <div className="flex flex-wrap justify-center gap-6 mb-12">
                         {socialLinks.map((link) => (
@@ -88,7 +89,7 @@ export default function FourthSection() {
                             </div>
                         </div>
                     )}
-                    <div className="text-[#6b7280] text-sm">
+                    <div className="text-[#6b7280] text-sm mt-4">
                         <p>© 2026 Naufal Gastiadirrijal Fawwaz Alamsyah. All rights reserved.</p>
                     </div>
                 </div>

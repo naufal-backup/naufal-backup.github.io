@@ -1,11 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaChevronDown, FaDownload } from 'react-icons/fa';
+import { FaChevronDown, FaDownload, FaRegWindowClose } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
-// ...existing code...
-// Dynamically import react-pdf components with SSR disabled
+import WavyText from '../components/WavyText';
 const PDFViewer = dynamic(() => import('../portfolio/[slug]/PDFViewer'), { ssr: false });
 import { useEffect, useState } from 'react';
-// Path to the PDF in public folder
 const cvPath = '/documents/CV-1.pdf';
 
 export default function FirstSection() {
@@ -42,7 +40,7 @@ export default function FirstSection() {
                 <div className="max-w-4xl w-full fade-in-up">
                     <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-[#9ca3af]">
                         Hello, I&apos;m <span className="text-[#e5e5e5] inline-flex items-center flex-wrap">
-                            <h2 className="mr-2">Naufal</h2>
+                            <h2 className="mr-2"><WavyText text="Naufal" /></h2>
                             <AnimatePresence>
                                 {isExpanded && (
                                     <motion.span
@@ -56,11 +54,11 @@ export default function FirstSection() {
                                         }}
                                         className="overflow-hidden whitespace-nowrap"
                                     >
-                                        Gastiadirrijal Fawwaz
+                                        <WavyText text="Gastiadirrijal Fawwaz" />
                                     </motion.span>
                                 )}
                             </AnimatePresence>
-                            <h2 >Alamsyah</h2>
+                            <h2><WavyText text="Alamsyah" /></h2>
                             <button 
                                 onClick={() => setIsExpanded(!isExpanded)} 
                                 className="text-2xl md:text-3xl hover:text-white transition-colors focus:outline-none ml-2"
@@ -76,11 +74,9 @@ export default function FirstSection() {
                         </span>
                     </h2>
                     <p className="text-xl md:text-2xl text-[#9ca3af] mb-4">
-                        Frontend Developer, UI/UX Designer, Junior Game Developer
+                        <WavyText text="Frontend Developer | UI/UX Designer | Game Developer" />
                     </p>
                     <p className="text-lg text-[#6b7280] max-w-2xl leading-relaxed">
-                        I craft beautiful digital experiences with a focus on clean design,
-                        intuitive interfaces, and modern web technologies. Passionate about
                         turning ideas into reality.
                     </p>
                     <div className="mt-12 flex gap-4 items-center">
@@ -135,7 +131,9 @@ export default function FirstSection() {
                                         className="absolute top-2 right-2 text-white text-2xl font-bold hover:text-red-400 focus:outline-none"
                                         aria-label="Close CV"
                                     >
-                                        ×
+                                        <FaRegWindowClose className="hover:scale-110 transition-transform" />
+                                        
+
                                     </button>
                                     <div className="overflow-auto max-h-[80vh] flex justify-center">
                                         <PDFViewer file={cvBlobUrl || cvPath} />
