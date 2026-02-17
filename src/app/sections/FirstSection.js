@@ -82,11 +82,11 @@ export default function FirstSection() {
                     <div className="mt-12 flex gap-4 items-center">
                         <a
                             href="#portfolio"
-                            className="inline-block px-8 py-4 bg-[#2a2a2a] hover:bg-[#3a3a3a] transition-all duration-300 rounded-lg text-[#e5e5e5] font-medium"
+                            className="inline-block px-8 py-4 bg-[#2a2a2a] hover:bg-[#3a3a3a] transition-all duration-300 rounded-lg text-[#e5e5e5] font-medium shadow-xl shadow-black/20"
                         >
                             View My Work
                         </a>
-                        <div className="inline-flex ml-2 rounded-lg overflow-hidden shadow-sm border border-[#333]">
+                        <div className="inline-flex ml-2 rounded-lg overflow-hidden shadow-sm border border-[#333] shadow-xl shadow-black/20">
                             <button
                                 onClick={() => {
                                     if (isMobile()) {
@@ -95,7 +95,7 @@ export default function FirstSection() {
                                         setShowCV(true);
                                     }
                                 }}
-                                className="px-6 py-4 bg-[#2a2a2a] hover:bg-[#3a3a3a] text-[#e5e5e5] font-medium focus:outline-none transition-all duration-300 cursor-pointer"
+                                className="px-6 py-4 bg-[#2a2a2a] hover:bg-[#3a3a3a] text-[#e5e5e5] font-medium focus:outline-none transition-all duration-300 cursor-pointer "
                                 style={{ borderRight: '1px solid #333' }}
                             >
                                 View CV

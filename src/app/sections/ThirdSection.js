@@ -40,7 +40,7 @@ const CardContent = ({ item, showDescription }) => {
     const stackList = item.stack ? item.stack.split(',').map(s => s.trim()) : [];
     
     return (
-        <div className="bg-[#2a2a2a] rounded-lg p-6 h-full flex flex-col w-full">
+        <div className="bg-[#2a2a2a] rounded-lg p-6 h-full flex flex-col w-full shadow-lg shadow-black/30">
             <div className="aspect-video bg-[#3a3a3a] rounded-md mb-4 flex items-center justify-center text-4xl overflow-hidden shrink-0">
                 {item.image ? (
                     <img
@@ -117,7 +117,7 @@ const PortfolioCard = ({ item, hoveredId, setHoveredId, columns }) => {
 
             {/* Animated Overlay Card - Yang Dilihat User */}
             <motion.div
-                className="absolute top-0 left-0 w-full rounded-lg "
+                className="absolute top-0 left-0 w-full rounded-lg shadow-xl shadow-black/20"
                 initial={false}
                 animate={{ 
                     zIndex: isHovered ? 50 : 10,
@@ -201,7 +201,7 @@ export default function ThirdSection({ portfolioItems }) {
                         <h3 className="text-2xl md:text-3xl font-bold mb-12 text-center text-[#9ca3af]">
                             <WavyText text="GitHub Repository" />
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
                             {githubItems.map((item) => (
                                 <PortfolioCard 
                                     key={item.id} 

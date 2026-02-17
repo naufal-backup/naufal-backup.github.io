@@ -25,7 +25,7 @@ export default function FourthSection() {
                     <p className="text-lg text-[#9ca3af] mb-12 max-w-2xl mx-auto">
                         <WavyText text="Feel free to reach out for collaborations, opportunities, or just to say hello!" />
                     </p>
-                    <div className="flex flex-wrap justify-center gap-6 mb-12">
+                    <div className="flex flex-wrap justify-center gap-6 mb-12 ">
                         {socialLinks.map((link) => (
                             <a
                                 key={link.name}
@@ -38,7 +38,7 @@ export default function FourthSection() {
                                 }}
                                 target={link.name === "GitHub" ? "_self" : "_blank"}
                                 rel="noopener noreferrer"
-                                className="flex flex-col items-center justify-center w-32 h-32 bg-[#2a2a2a] hover:bg-[#3a3a3a] rounded-lg transition-all duration-300 hover:transform hover:scale-110 group cursor-pointer"
+                                className="flex flex-col items-center justify-center w-32 h-32 bg-[#2a2a2a] hover:bg-[#3a3a3a] rounded-lg transition-all duration-300 hover:transform hover:scale-110 group cursor-pointer shadow-xl shadow-black/20"
                             >
                                 <span className="text-4xl mb-2 group-hover:scale-125 transition-transform duration-300">
                                     {link.icon}
