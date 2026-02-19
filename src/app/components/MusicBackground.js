@@ -1,11 +1,40 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FaVolumeUp, FaVolumeMute, FaMusic } from 'react-icons/fa';
 
 export default function MusicBackground({ isMusicPlaying, toggleMusic, musicError, songs = [], currentSong, onSongChange }) {
     const [showSongList, setShowSongList] = useState(false);
+    const popupRef = useRef(null);
+
+    // Close popup on click outside or scroll
+    useEffect(() => {
+        if (!showSongList) return;
+        function handleClick(e) {
+            if (popupRef.current && !popupRef.current.contains(e.target)) {
+                setShowSongList(false);
+            }
+        }
+        function handleScroll() {
+            setShowSongList(false);
+        }
+        document.addEventListener('mousedown', handleClick);
+        window.addEventListener('scroll', handleScroll, true);
+        return () => {
+            document.removeEventListener('mousedown', handleClick);
+            window.removeEventListener('scroll', handleScroll, true);
+        };
+    }, [showSongList]);
+
+    // Prevent checkbox from being re-checked by outside click handler
+    useEffect(() => {
+        if (!showSongList) return;
+        const input = document.querySelector('input[type="checkbox"][tabindex="-1"]');
+        if (input) {
+            input.blur();
+        }
+    }, [showSongList]);
 
     return (
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
@@ -13,6 +42,7 @@ export default function MusicBackground({ isMusicPlaying, toggleMusic, musicErro
             <div className="relative w-full flex flex-col items-end">
                 {showSongList && (
                     <div
+                        ref={popupRef}
                         className="absolute bottom-16 right-0 mb-2 min-w-[220px] z-50 rounded-xl shadow-2xl p-3 animate-music-popup"
                         style={{
                             background: 'rgba(40, 40, 40, 0.85)',
@@ -48,29 +78,36 @@ export default function MusicBackground({ isMusicPlaying, toggleMusic, musicErro
                     </div>
                 )}
                 <div className="flex gap-2">
-                    <button
-                        onClick={() => setShowSongList(v => !v)}
+                    <label
                         title="Pilih Lagu"
-                        className="relative flex items-center justify-center w-12 h-12 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
+                        className={`relative flex items-center justify-center w-12 h-12 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer ${!isMusicPlaying ? 'opacity-60 cursor-not-allowed' : ''}`}
                         style={{
-                            background: isMusicPlaying
+                            background: showSongList
                                 ? 'linear-gradient(135deg, #6366f1, #a855f7)'
                                 : 'rgba(40, 40, 40, 0.85)',
                             border: '1px solid rgba(255,255,255,0.15)',
                             backdropFilter: 'blur(8px)',
-                            boxShadow: isMusicPlaying
-                                ? '0 0 16px rgba(139, 92, 246, 0.5)'
-                                : '0 4px 15px rgba(0,0,0,0.4)',
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.4)',
                         }}
                     >
+                        <input
+                            type="checkbox"
+                            checked={showSongList}
+                            onClick={e => e.stopPropagation()}
+                            onChange={e => {
+                                e.stopPropagation();
+                                if (showSongList) {
+                                    setShowSongList(false);
+                                } else {
+                                    setShowSongList(true);
+                                }
+                            }}
+                            disabled={!isMusicPlaying}
+                            className="absolute opacity-0 w-0 h-0"
+                            tabIndex={-1}
+                        />
                         <FaMusic className="text-white" />
-                        {isMusicPlaying && (
-                            <span
-                                className="absolute inline-flex h-full w-full rounded-full opacity-30 animate-ping"
-                                style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}
-                            />
-                        )}
-                    </button>
+                    </label>
                     <button
                         onClick={toggleMusic}
                         title={isMusicPlaying ? 'Matikan Musik' : 'Nyalakan Musik'}

@@ -1,8 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
-
-import useSound from 'use-sound';
+import { useState, useEffect, useRef } from 'react';
 
 import FirstSection from './sections/FirstSection';
 import SecondSection from './sections/SecondSection';
@@ -19,62 +16,65 @@ const portfolioItems = [
     { id: 6, title: "Waste Sorter", description: "Educational Game", stack: "Unity2D", url: "https://github.com/naufal-backup/Waste-Sorter", image: "/images/waste-sorter.png" },
 ];
 
-
 const SONGS = [
-    {
-        src: '/music/u_8hxfqtxxth-lofi-cafe-relaxing-backsound-323881.mp3',
-        title: 'Lofi Cafe',
-    },
-    {
-        src: '/music/relaxing-piano-131107.mp3',
-        title: 'Relaxing Piano',
-    },
-    {
-        src: '/music/chill-vibes-14661.mp3',
-        title: 'Chill Vibes',
-    },
+    { src: '/music/lofiMusic.mp3',     title: 'Lofi Cafe' },
+    { src: '/music/relaxingPiano.mp3', title: 'Relaxing Piano' },
+    { src: '/music/chillVibe.mp3',     title: 'Chill Vibes' },
 ];
 
 export default function Home() {
     const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+    const [isMusicOnClick, setIsMusicOnClick] = useState(false);
     const [musicError, setMusicError] = useState(null);
     const [currentSong, setCurrentSong] = useState(SONGS[0]);
 
-    // useSound hook for the current song
-    const [play, { stop, sound }] = useSound(currentSong.src, {
-        volume: 0.4,
-        loop: true,
-        onload: () => setMusicError(null),
-        onplayerror: (err) => setMusicError('Error: ' + err.message),
-        onloaderror: (err) => setMusicError('Error: ' + err.message),
-    });
+    // Single, persistent Audio instance — never recreated on re-render
+    const audioRef = useRef(null);
 
-    // Stop music if song changes
+    // Initialize Audio once on mount (client-side only)
     useEffect(() => {
-        if (isMusicPlaying) {
-            stop();
-            setIsMusicPlaying(false);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentSong.src]);
+        const audio = new Audio(SONGS[0].src);
+        audio.volume = 0.4;
+        audio.loop = true;
+        audio.onerror = () => setMusicError('Gagal memuat musik.');
+        audioRef.current = audio;
+
+        return () => {
+            audio.pause();
+            audio.src = '';
+        };
+    }, []);
 
     const toggleMusic = () => {
-        try {
-            if (isMusicPlaying) {
-                stop();
-                setIsMusicPlaying(false);
-            } else {
-                play();
-                setIsMusicPlaying(true);
-            }
-        } catch (err) {
-            console.error(err);
-            setMusicError('Error: ' + err.message);
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        setIsMusicOnClick(true);
+        setMusicError(null);
+
+        if (isMusicPlaying) {
+            audio.pause();
+            setIsMusicPlaying(false);
+        } else {
+            audio.play().catch(err => setMusicError('Error: ' + err.message));
+            setIsMusicPlaying(true);
         }
     };
 
     const handleSongChange = (song) => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        // Stop current playback & swap source
+        audio.pause();
+        audio.src = song.src;
+        audio.load();
         setCurrentSong(song);
+        setMusicError(null);
+
+        // Auto-play the newly selected song
+        audio.play().catch(err => setMusicError('Error: ' + err.message));
+        setIsMusicPlaying(true);
     };
 
     return (
@@ -84,6 +84,7 @@ export default function Home() {
             <ThirdSection portfolioItems={portfolioItems} />
             <FourthSection />
             <MusicBackground
+                isMusicOnClick={isMusicOnClick}
                 isMusicPlaying={isMusicPlaying}
                 toggleMusic={toggleMusic}
                 musicError={musicError}
