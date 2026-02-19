@@ -1,11 +1,14 @@
 "use client";
-import { useState } from 'react';
-import useSound from 'use-sound';
+import { useState, useEffect } from 'react';
 import { FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
+
+import useSound from 'use-sound';
+
 import FirstSection from './sections/FirstSection';
 import SecondSection from './sections/SecondSection';
 import ThirdSection from './sections/ThirdSection';
 import FourthSection from './sections/FourthSection';
+import MusicBackground from './components/MusicBackground';
 
 const portfolioItems = [
     { id: 1, title: "Alternate Arc Archive", description: "Fan-made website for Alternate Arc", stack: "Laravel, MySQL, Bootstrap",  url: "https://github.com/naufal-backup/Alternate-Arc-Archive3", image: "/images/alternate-arc-archive.png" },
@@ -16,17 +19,44 @@ const portfolioItems = [
     { id: 6, title: "Waste Sorter", description: "Educational Game", stack: "Unity2D", url: "https://github.com/naufal-backup/Waste-Sorter", image: "/images/waste-sorter.png" },
 ];
 
-const MUSIC_SRC = '/music/u_8hxfqtxxth-lofi-cafe-relaxing-backsound-323881.mp3';
+
+const SONGS = [
+    {
+        src: '/music/u_8hxfqtxxth-lofi-cafe-relaxing-backsound-323881.mp3',
+        title: 'Lofi Cafe',
+    },
+    {
+        src: '/music/relaxing-piano-131107.mp3',
+        title: 'Relaxing Piano',
+    },
+    {
+        src: '/music/chill-vibes-14661.mp3',
+        title: 'Chill Vibes',
+    },
+];
 
 export default function Home() {
     const [isMusicPlaying, setIsMusicPlaying] = useState(false);
     const [musicError, setMusicError] = useState(null);
+    const [currentSong, setCurrentSong] = useState(SONGS[0]);
 
-    const [play, { stop }] = useSound(MUSIC_SRC, {
+    // useSound hook for the current song
+    const [play, { stop, sound }] = useSound(currentSong.src, {
         volume: 0.4,
         loop: true,
-        onload: () => setMusicError(null)
+        onload: () => setMusicError(null),
+        onplayerror: (err) => setMusicError('Error: ' + err.message),
+        onloaderror: (err) => setMusicError('Error: ' + err.message),
     });
+
+    // Stop music if song changes
+    useEffect(() => {
+        if (isMusicPlaying) {
+            stop();
+            setIsMusicPlaying(false);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentSong.src]);
 
     const toggleMusic = () => {
         try {
@@ -43,46 +73,24 @@ export default function Home() {
         }
     };
 
+    const handleSongChange = (song) => {
+        setCurrentSong(song);
+    };
+
     return (
         <div className="bg-[#1a1a1a] text-[#e5e5e5]">
             <FirstSection />
             <SecondSection />
             <ThirdSection portfolioItems={portfolioItems} />
             <FourthSection />
-
-            <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
-
-                {musicError && (
-                    <div className="bg-red-900 text-red-200 text-xs px-3 py-1.5 rounded-lg max-w-xs shadow-lg">
-                        {musicError}
-                    </div>
-                )}
-
-                <button
-                    onClick={toggleMusic}
-                    title={isMusicPlaying ? 'Matikan Musik' : 'Nyalakan Musik'}
-                    className="relative flex items-center justify-center w-12 h-12 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
-                    style={{
-                        background: isMusicPlaying
-                            ? 'linear-gradient(135deg, #6366f1, #a855f7)'
-                            : 'rgba(40, 40, 40, 0.85)',
-                        border: '1px solid rgba(255,255,255,0.15)',
-                        backdropFilter: 'blur(8px)',
-                        boxShadow: isMusicPlaying
-                            ? '0 0 16px rgba(139, 92, 246, 0.5)'
-                            : '0 4px 15px rgba(0,0,0,0.4)',
-                    }}
-                >
-                    {isMusicPlaying ? <FaVolumeUp className="text-white" /> : <FaVolumeMute className="text-white" />}
-
-                    {isMusicPlaying && (
-                        <span
-                            className="absolute inline-flex h-full w-full rounded-full opacity-30 animate-ping"
-                            style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}
-                        />
-                    )}
-                </button>
-            </div>
+            <MusicBackground
+                isMusicPlaying={isMusicPlaying}
+                toggleMusic={toggleMusic}
+                musicError={musicError}
+                songs={SONGS}
+                currentSong={currentSong}
+                onSongChange={handleSongChange}
+            />
         </div>
     );
 }
