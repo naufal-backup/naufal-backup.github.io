@@ -41,6 +41,14 @@
     },
     {
         "id": 6,
+        "title": "disbox-linux",
+        "description": "Discord-based file storage client for Linux",
+        "stack": "Bash, Linux Shell Script",
+        "url": "https://github.com/naufal-backup/disbox-linux",
+        "image": "/images/disbox-linux.png"
+    },
+    {
+        "id": 7,
         "title": "Waste Sorter",
         "description": "Educational Game",
         "stack": "Unity2D",
