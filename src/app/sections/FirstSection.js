@@ -74,7 +74,7 @@ export default function FirstSection() {
                         </span>
                     </h2>
                     <p className="text-xl md:text-2xl text-[#9ca3af] mb-4">
-                        <WavyText text="Frontend Developer | UI/UX Designer | Game Developer" />
+                        <WavyText text="Frontend Developer | Desktop Developer | UI/UX Designer | Game Developer" />
                     </p>
                     <p className="text-lg text-[#6b7280] max-w-2xl leading-relaxed">
                         turning ideas into reality.

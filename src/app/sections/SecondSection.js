@@ -1,4 +1,4 @@
-import { SiPython,SiFigma,SiLaravel, SiMysql, SiBootstrap, SiTailwindcss, SiGodotengine, SiJavascript, SiGtk, SiGnubash, SiNextdotjs, SiUnity } from 'react-icons/si';
+import { SiPython,SiFigma,SiLaravel, SiMysql, SiBootstrap, SiTailwindcss, SiGodotengine, SiJavascript, SiGtk, SiGnubash, SiNextdotjs, SiUnity, SiElectron } from 'react-icons/si';
 import WavyText from '../components/WavyText';
 
 export default function SecondSection() {
@@ -18,6 +18,7 @@ export default function SecondSection() {
     ];
     const stackDesktop = [
         { name: "GTK", icon: <SiGtk size={24} className="text-[#89d53c]" /> },
+        { name: "Electron", icon: <SiElectron size={24} className="text-[#9FEAF9]" /> },
         { name: "Linux Shell Script", icon: <SiGnubash size={24} className="text-[#4EAA25]" /> },
         {name: "Python", icon: <SiPython size={24} className="text-[#F7DF1E]" /> },
     ];

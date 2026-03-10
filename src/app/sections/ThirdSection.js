@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SiPython, SiFigma, SiLaravel, SiMysql, SiBootstrap, SiTailwindcss, SiGodotengine, SiJavascript, SiGtk, SiGnubash, SiNextdotjs, SiUnity, SiFramer } from 'react-icons/si';
+import { SiPython, SiFigma, SiLaravel, SiMysql, SiBootstrap, SiTailwindcss, SiGodotengine, SiJavascript, SiGtk, SiGnubash, SiNextdotjs, SiUnity, SiFramer, SiElectron, SiCss3 } from 'react-icons/si';
 import WavyText from '../components/WavyText';
 
 // --- HELPER FUNCTIONS & CONSTANTS ---
@@ -32,6 +32,8 @@ const iconMap = {
     "Next.js": <SiNextdotjs size={20} className="text-white" />,
     "Framer Motion": <SiFramer size={20} className="text-white" />,
     "Unity2D": <SiUnity size={20} className="text-[#e5e5e5]" />,
+    "Electron": <SiElectron size={20} className="text-[#9FEAF9]" />,
+    "CSS": <SiCss3 size={20} className="text-[#1572B6]" />,
 };
 
 // --- SUB-COMPONENTS (DEFINISIKAN DI LUAR!) ---
