@@ -41,8 +41,8 @@
     },
     {
         "id": 6,
-        "title": "disbox-linux",
-        "description": "Discord-based file storage client for Linux",
+        "title": "Disbox",
+        "description": "Discord-based file storage client Desktop",
         "stack": "Electron, Javascript, CSS",
         "url": "https://github.com/naufal-backup/disbox-linux",
         "image": "/images/disbox-linux.png"
