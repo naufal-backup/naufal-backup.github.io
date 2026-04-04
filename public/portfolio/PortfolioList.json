@@ -25,6 +25,14 @@
     },
     {
         "id": 4,
+        "title": "Disbox-Web",
+        "description": "Discord-based file storage client Web",
+        "stack": "Electron, Javascript, CSS",
+        "url": "https://disbox-web-weld.vercel.app/",
+        "image": "/images/Disbox-web.png"
+    },
+    {
+        "id": 5,
         "title": "GTK Theme Customizer",
         "description": "GTK Window Customization",
         "stack": "Javascript, GTK, Linux Shell Script",
@@ -32,7 +40,7 @@
         "image": "/images/gtk-theme-customizer.png"
     },
     {
-        "id": 5,
+        "id": 6,
         "title": "This Page",
         "description": "Portfolio Website",
         "stack": "Next.js, Tailwind CSS, Framer Motion",
@@ -40,7 +48,7 @@
         "image": "/images/this-page.png"
     },
     {
-        "id": 6,
+        "id": 7,
         "title": "Disbox",
         "description": "Discord-based file storage client Desktop",
         "stack": "Electron, Javascript, CSS",
@@ -48,7 +56,7 @@
         "image": "/images/disbox-linux.png"
     },
     {
-        "id": 7,
+        "id": 8,
         "title": "Waste Sorter",
         "description": "Educational Game",
         "stack": "Unity2D",
