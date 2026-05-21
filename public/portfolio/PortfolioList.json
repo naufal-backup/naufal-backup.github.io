@@ -62,5 +62,13 @@
         "stack": "Unity2D",
         "url": "https://github.com/naufal-backup/Waste-Sorter",
         "image": "/images/waste-sorter.png"
+    },
+    {
+        "id": 9,
+        "title": "InvenSync",
+        "description": "Inventory Management System",
+        "stack": "Javascript, Cloudflare Pages",
+        "url": "https://invensync.pages.dev/",
+        "image": "/images/invensync.png"
     }
 ]
