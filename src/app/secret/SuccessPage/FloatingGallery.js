@@ -29,8 +29,8 @@ export default function FloatingGallery({ images }) {
         return (
           <motion.div
             key={i}
-            className="absolute p-2 rounded-2xl shadow-[0_0_20px_rgba(255,105,180,0.4)] border border-pink-300/30 bg-white/5 backdrop-blur-md pointer-events-auto cursor-pointer"
-            style={{ left: startX, top: startY, width: "160px" }}
+            className="absolute pointer-events-none"
+            style={{ left: startX, top: startY, width: "160px", zIndex: 10 }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{
               opacity: 1,
@@ -46,17 +46,22 @@ export default function FloatingGallery({ images }) {
               ease: "linear",
               delay: delay,
             }}
-            drag
-            dragConstraints={{ left: -200, right: windowSize.width, top: -200, bottom: windowSize.height }}
-            whileHover={{ scale: 1.2, zIndex: 50, transition: { duration: 0.3 } }}
-            whileDrag={{ scale: 1.25, zIndex: 60, cursor: "grabbing" }}
           >
-            <img
-              src={`/Sayang/${img}`}
-              alt="Gallery"
-              className="w-full h-auto rounded-xl object-cover"
-              draggable="false"
-            />
+            <motion.div
+              className="p-2 rounded-2xl shadow-[0_0_20px_rgba(255,105,180,0.4)] border border-pink-300/30 bg-white/5 backdrop-blur-md pointer-events-auto cursor-grab active:cursor-grabbing"
+              drag
+              dragElastic={0.6}
+              dragMomentum={false}
+              whileHover={{ scale: 1.15, zIndex: 50, transition: { duration: 0.2 } }}
+              whileDrag={{ scale: 1.25, zIndex: 60 }}
+            >
+              <img
+                src={`/Sayang/${img}`}
+                alt="Gallery"
+                className="w-full aspect-[4/5] rounded-xl object-cover pointer-events-none"
+                draggable="false"
+              />
+            </motion.div>
           </motion.div>
         );
       })}
