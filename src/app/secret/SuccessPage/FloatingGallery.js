@@ -46,7 +46,10 @@ export default function FloatingGallery({ images }) {
               ease: "linear",
               delay: delay,
             }}
+            drag
+            dragConstraints={{ left: -200, right: windowSize.width, top: -200, bottom: windowSize.height }}
             whileHover={{ scale: 1.2, zIndex: 50, transition: { duration: 0.3 } }}
+            whileDrag={{ scale: 1.25, zIndex: 60, cursor: "grabbing" }}
           >
             <img
               src={`/Sayang/${img}`}
