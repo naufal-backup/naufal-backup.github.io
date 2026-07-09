@@ -67,7 +67,7 @@ export default function FloatingGallery({ images }) {
               <img
                 src={`/Sayang/${img}`}
                 alt="Gallery"
-                className="w-full aspect-[4/5] rounded-xl object-cover pointer-events-none"
+                className="w-full h-auto rounded-xl pointer-events-none"
                 draggable="false"
               />
             </motion.div>
