@@ -18,12 +18,21 @@ export default function FloatingGallery({ images }) {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
       {images.map((img, i) => {
-        // Randomize initial position keeping them mostly inside the view
-        const startX = Math.random() * (windowSize.width - 200);
-        const startY = Math.random() * (windowSize.height - 250);
+        // Determine grid layout for even spreading
+        const cols = Math.max(2, Math.ceil(Math.sqrt(images.length * (windowSize.width / windowSize.height))));
+        const rows = Math.ceil(images.length / cols);
+        const cellWidth = windowSize.width / cols;
+        const cellHeight = windowSize.height / rows;
+        
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+
+        // Position evenly with some randomness within their cell
+        const startX = (col * cellWidth) + (Math.random() * (cellWidth * 0.6));
+        const startY = (row * cellHeight) + (Math.random() * (cellHeight * 0.6));
 
         // Randomize animation parameters
-        const duration = 20 + Math.random() * 20;
+        const duration = 25 + Math.random() * 25;
         const delay = Math.random() * -20; // negative delay so it starts mid-animation
 
         return (
@@ -35,9 +44,9 @@ export default function FloatingGallery({ images }) {
             animate={{
               opacity: 1,
               scale: 1,
-              x: [0, Math.random() * 300 - 150, Math.random() * 300 - 150, 0],
-              y: [0, Math.random() * 300 - 150, Math.random() * 300 - 150, 0],
-              rotate: [Math.random() * 10 - 5, Math.random() * 20 - 10, Math.random() * -20 + 10, Math.random() * 10 - 5],
+              x: [0, Math.random() * 500 - 250, Math.random() * 500 - 250, 0],
+              y: [0, Math.random() * 500 - 250, Math.random() * 500 - 250, 0],
+              rotate: [Math.random() * 10 - 5, Math.random() * 30 - 15, Math.random() * -30 + 15, Math.random() * 10 - 5],
             }}
             transition={{
               duration: duration,
