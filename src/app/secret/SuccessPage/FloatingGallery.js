@@ -38,8 +38,8 @@ export default function FloatingGallery({ images }) {
         return (
           <motion.div
             key={i}
-            className="absolute pointer-events-none"
-            style={{ left: startX, top: startY, width: "160px", zIndex: 10 }}
+            className="absolute pointer-events-none flex items-center justify-center"
+            style={{ left: startX, top: startY, zIndex: 10 }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{
               opacity: 1,
@@ -57,7 +57,7 @@ export default function FloatingGallery({ images }) {
             }}
           >
             <motion.div
-              className="p-2 rounded-2xl shadow-[0_0_20px_rgba(255,105,180,0.4)] border border-pink-300/30 bg-white/5 backdrop-blur-md pointer-events-auto cursor-grab active:cursor-grabbing"
+              className="p-2 rounded-2xl shadow-[0_0_20px_rgba(255,105,180,0.4)] border border-pink-300/30 bg-white/5 backdrop-blur-md pointer-events-auto cursor-grab active:cursor-grabbing inline-flex"
               drag
               dragElastic={0.6}
               dragMomentum={false}
@@ -67,7 +67,7 @@ export default function FloatingGallery({ images }) {
               <img
                 src={`/Sayang/${img}`}
                 alt="Gallery"
-                className="w-full h-auto rounded-xl pointer-events-none"
+                className="w-auto h-auto max-w-[180px] max-h-[220px] md:max-w-[240px] md:max-h-[280px] rounded-xl pointer-events-none"
                 draggable="false"
               />
             </motion.div>
