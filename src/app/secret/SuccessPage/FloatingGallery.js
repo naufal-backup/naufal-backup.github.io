@@ -76,7 +76,7 @@ export default function FloatingGallery({ images }) {
             }}
           >
             <motion.div
-              className="p-2 rounded-2xl shadow-[0_0_22px_rgba(56,189,248,0.42)] border border-cyan-200/35 bg-sky-950/25 backdrop-blur-md pointer-events-auto cursor-grab active:cursor-grabbing inline-flex"
+              className="p-2 rounded-2xl shadow-[0_0_22px_rgba(56,189,248,0.42)] border border-cyan-200/35 bg-transparent pointer-events-auto cursor-grab active:cursor-grabbing inline-flex"
               drag={!isMobile}
               dragElastic={0.6}
               dragMomentum={false}
