@@ -23,7 +23,7 @@ export default function FloatingGallery({ images }) {
   if (windowSize.width === 0) return null;
 
   const isMobile = windowSize.width < 640;
-  const cap = isMobile ? Math.min(images.length, 6) : images.length;
+  const cap = images.length;
   const visibleImages = images.slice(0, cap);
 
   return (
