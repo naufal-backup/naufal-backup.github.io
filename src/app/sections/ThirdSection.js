@@ -42,8 +42,8 @@ const CardContent = ({ item, showDescription }) => {
     const stackList = item.stack ? item.stack.split(',').map(s => s.trim()) : [];
     
     return (
-        <div className="bg-[#2a2a2a] rounded-lg p-6 h-full flex flex-col w-full shadow-lg shadow-black/30">
-            <div className="aspect-video bg-[#3a3a3a] rounded-md mb-4 flex items-center justify-center text-4xl overflow-hidden shrink-0">
+        <div className="bg-[#1a1a1a] rounded-lg p-6 h-full flex flex-col w-full border border-[#2a2a2a]">
+            <div className="aspect-video bg-[#0f0f0f] rounded-md mb-4 flex items-center justify-center text-4xl overflow-hidden shrink-0">
                 {item.image ? (
                     <img
                         src={item.image}
@@ -54,7 +54,7 @@ const CardContent = ({ item, showDescription }) => {
                     "📁"
                 )}
             </div>
-            <h3 className="text-xl font-semibold mb-2 shrink-0">{item.title}</h3>
+            <h3 className="text-xl font-semibold mb-2 shrink-0 text-[#f5f5f5]">{item.title}</h3>
 
 
 
@@ -67,15 +67,15 @@ const CardContent = ({ item, showDescription }) => {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="overflow-hidden"
                      >
-                        <h4 className="text-base text-gray-400 mt-1 mb-1">{item.description}</h4>
+                        <h4 className="text-base text-[#a0a0a0] mt-1 mb-1">{item.description}</h4>
                     </motion.div>
                 )}
             </AnimatePresence>
             
             <div className="flex flex-wrap gap-3 mb-3 shrink-0 mt-1">
                 {stackList.map((tech, idx) => (
-                    <div key={idx} title={tech} className="bg-[#1a1a1a] p-2 rounded-full cursor-help">
-                        {iconMap[tech] || <span className="text-xs text-gray-400">{tech}</span>}
+                    <div key={idx} title={tech} className="bg-[#0f0f0f] p-2 rounded-full cursor-help">
+                        {iconMap[tech] || <span className="text-xs text-[#808080]">{tech}</span>}
                     </div>
                 ))}
             </div>
@@ -119,11 +119,11 @@ const PortfolioCard = ({ item, hoveredId, setHoveredId, columns }) => {
 
             {/* Animated Overlay Card - Yang Dilihat User */}
             <motion.div
-                className="absolute top-0 left-0 w-full rounded-lg shadow-xl shadow-black/20"
+                className="absolute top-0 left-0 w-full rounded-lg"
                 initial={false}
                 animate={{ 
                     zIndex: isHovered ? 50 : 10,
-                    backgroundColor: isHovered ? '#3a3a3a' : '#2a2a2a',
+                    backgroundColor: isHovered ? '#242424' : '#1a1a1a',
                 }}
                 transition={{ duration: 0.2 }}
                 layout // Menghaluskan transisi perubahan dimensi
@@ -173,15 +173,15 @@ export default function ThirdSection({ portfolioItems }) {
     }, [hoveredId, columns]);
 
     return (
-        <section id="portfolio" className="min-h-screen py-12 px-6 md:px-12 bg-[#1f1f1f]">
+        <section id="portfolio" className="min-h-screen py-12 px-6 md:px-12 bg-[#0f0f0f]">
             <div className="max-w-6xl mx-auto">
-                <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
-                    <WavyText text="Portfolio" className="border-b border-[#333] pb-2"/>
+                <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center text-[#f5f5f5]">
+                    <WavyText text="Portfolio" className="border-b border-[#2a2a2a] pb-2"/>
                 </h2>
                 
                 {livePreviewItems.length > 0 && (
                     <div className="mb-16">
-                        <h3 className="text-2xl md:text-3xl font-bold mb-12 text-center text-[#9ca3af]">
+                        <h3 className="text-2xl md:text-3xl font-bold mb-12 text-center text-[#a0a0a0]">
                             <WavyText text="Live Preview" />
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -200,7 +200,7 @@ export default function ThirdSection({ portfolioItems }) {
 
                 {githubItems.length > 0 && (
                     <div className="mb-12">
-                        <h3 className="text-2xl md:text-3xl font-bold mb-12 text-center text-[#9ca3af]">
+                        <h3 className="text-2xl md:text-3xl font-bold mb-12 text-center text-[#a0a0a0]">
                             <WavyText text="GitHub Repository" />
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">

@@ -23,25 +23,25 @@ export default function SecondSection() {
         {name: "Python", icon: <SiPython size={24} className="text-[#F7DF1E]" /> },
     ];
     return (
-    <section id="stack" className="py-12 px-6 md:px-12 bg-[#1f1f1f]">
+    <section id="stack" className="py-12 px-6 md:px-12 bg-[#0f0f0f]">
                 <div className="max-w-6xl mx-auto">
-                    <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center text-white">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center text-[#f5f5f5]">
                         <WavyText text="Stack" />
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                          {/* Web Dev Column */}
                         <div>
-                            <h3 className="text-xl font-semibold mb-6 text-center text-[#e5e5e5] border-b border-[#333] pb-2">
-                                <WavyText text="Web Development" className='text-[#9ca3af]' />
+                            <h3 className="text-xl font-semibold mb-6 text-center text-[#a0a0a0] border-b border-[#2a2a2a] pb-2">
+                                <WavyText text="Web Development" className='text-[#a0a0a0]' />
                             </h3>
                             <div className="flex flex-wrap justify-center gap-4">
                                 {stackWeb.map((tech) => (
                                     <div key={tech.name} className="flex flex-col items-center group cursor-pointer relative">
-                                        <div className="w-16 h-16 bg-[#3a3a3a] rounded-full flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
+                                        <div className="w-16 h-16 bg-[#1a1a1a] rounded-full flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
                                             {tech.icon}
                                         </div>
-                                        <span className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity absolute top-14 bg-black/80 px-2 py-1 rounded whitespace-nowrap z-10 pointer-events-none">{tech.name}</span>
+                                        <span className="text-xs text-[#808080] opacity-0 group-hover:opacity-100 transition-opacity absolute top-14 bg-[#1a1a1a] px-2 py-1 rounded whitespace-nowrap z-10 pointer-events-none">{tech.name}</span>
                                     </div>
                                 ))}
                             </div>
@@ -49,16 +49,16 @@ export default function SecondSection() {
 
                         {/* Game Dev Column */}
                         <div>
-                            <h3 className="text-xl font-semibold mb-6 text-center text-[#e5e5e5] border-b border-[#333] pb-2">
-                                <WavyText text="Game Development" className='text-[#9ca3af]' />
+                            <h3 className="text-xl font-semibold mb-6 text-center text-[#a0a0a0] border-b border-[#2a2a2a] pb-2">
+                                <WavyText text="Game Development" className='text-[#a0a0a0]' />
                             </h3>
                             <div className="flex flex-wrap justify-center gap-4">
                                  {stackGame.map((tech) => (
                                     <div key={tech.name} className="flex flex-col items-center group cursor-pointer relative">
-                                        <div className="w-16 h-16 bg-[#3a3a3a] rounded-full flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
+                                        <div className="w-16 h-16 bg-[#1a1a1a] rounded-full flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
                                             {tech.icon}
                                         </div>
-                                        <span className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity absolute top-14 bg-black/80 px-2 py-1 rounded whitespace-nowrap z-10 pointer-events-none">{tech.name}</span>
+                                        <span className="text-xs text-[#808080] opacity-0 group-hover:opacity-100 transition-opacity absolute top-14 bg-[#1a1a1a] px-2 py-1 rounded whitespace-nowrap z-10 pointer-events-none">{tech.name}</span>
                                     </div>
                                 ))}
                             </div>
@@ -66,16 +66,16 @@ export default function SecondSection() {
 
                          {/* Desktop App Column */}
                          <div>
-                            <h3 className="text-xl font-semibold mb-6 text-center text-[#e5e5e5] border-b border-[#333] pb-2">
-                                <WavyText text="Desktop App" className='text-[#9ca3af]' />
+                            <h3 className="text-xl font-semibold mb-6 text-center text-[#a0a0a0] border-b border-[#2a2a2a] pb-2">
+                                <WavyText text="Desktop App" className='text-[#a0a0a0]' />
                             </h3>
                              <div className="flex flex-wrap justify-center gap-4">
                                 {stackDesktop.map((tech) => (
                                     <div key={tech.name} className="flex flex-col items-center group cursor-pointer relative">
-                                        <div className="w-16 h-16 bg-[#3a3a3a] rounded-full flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
+                                        <div className="w-16 h-16 bg-[#1a1a1a] rounded-full flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
                                             {tech.icon}
                                         </div>
-                                        <span className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity absolute top-14 bg-black/80 px-2 py-1 rounded whitespace-nowrap z-10 pointer-events-none">{tech.name}</span>
+                                        <span className="text-xs text-[#808080] opacity-0 group-hover:opacity-100 transition-opacity absolute top-14 bg-[#1a1a1a] px-2 py-1 rounded whitespace-nowrap z-10 pointer-events-none">{tech.name}</span>
                                     </div>
                                 ))}
                             </div>

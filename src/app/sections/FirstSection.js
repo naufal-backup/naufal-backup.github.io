@@ -36,10 +36,10 @@ export default function FirstSection() {
     }
 
     return (
-            <section className="min-h-screen flex items-center justify-center px-6 md:px-12">
+            <section className="min-h-screen flex items-center justify-center px-6 md:px-12 bg-[#0a0a0a]">
                 <div className="max-w-4xl w-full fade-in-up">
-                    <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-[#9ca3af]">
-                        Hello, I&apos;m <span className="text-[#e5e5e5] inline-flex items-center flex-wrap">
+                    <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-[#a0a0a0]">
+                        Hello, I&apos;m <span className="text-[#f5f5f5] inline-flex items-center flex-wrap">
                             <h2 className="mr-2"><WavyText text="Naufal" /></h2>
                             <AnimatePresence>
                                 {isExpanded && (
@@ -73,20 +73,20 @@ export default function FirstSection() {
                             </button>
                         </span>
                     </h2>
-                    <p className="text-xl md:text-2xl text-[#9ca3af] mb-4">
+                    <p className="text-xl md:text-2xl text-[#a0a0a0] mb-4">
                         <WavyText text="Frontend Developer | Desktop Developer | UI/UX Designer | Game Developer" />
                     </p>
-                    <p className="text-lg text-[#6b7280] max-w-2xl leading-relaxed">
+                    <p className="text-lg text-[#808080] max-w-2xl leading-relaxed">
                         turning ideas into reality.
                     </p>
                     <div className="mt-12 flex gap-4 items-center">
                         <a
                             href="#portfolio"
-                            className="inline-block px-8 py-4 bg-[#2a2a2a] hover:bg-[#3a3a3a] transition-all duration-300 rounded-lg text-[#e5e5e5] font-medium shadow-xl shadow-black/20"
+                            className="inline-block px-8 py-4 bg-[#4a9eff] hover:bg-[#3d8ae6] transition-all duration-300 rounded-lg text-white font-medium"
                         >
                             View My Work
                         </a>
-                        <div className="inline-flex ml-2 rounded-lg overflow-hidden shadow-sm border border-[#333] shadow-xl shadow-black/20">
+                        <div className="inline-flex ml-2 rounded-lg overflow-hidden border border-[#2a2a2a]">
                             <button
                                 onClick={() => {
                                     if (isMobile()) {
@@ -95,15 +95,15 @@ export default function FirstSection() {
                                         setShowCV(true);
                                     }
                                 }}
-                                className="px-6 py-4 bg-[#2a2a2a] hover:bg-[#3a3a3a] text-[#e5e5e5] font-medium focus:outline-none transition-all duration-300 cursor-pointer "
-                                style={{ borderRight: '1px solid #333' }}
+                                className="px-6 py-4 bg-[#1a1a1a] hover:bg-[#242424] text-[#f5f5f5] font-medium focus:outline-none transition-all duration-300 cursor-pointer "
+                                style={{ borderRight: '1px solid #2a2a2a' }}
                             >
                                 View CV
                             </button>
                             <a
                                 href={cvPath}
                                 download
-                                className="px-6 py-4 bg-[#232323] hover:bg-[#3a3a3a] text-[#e5e5e5] font-medium focus:outline-none transition-all duration-300 cursor-pointer"
+                                className="px-6 py-4 bg-[#1a1a1a] hover:bg-[#242424] text-[#f5f5f5] font-medium focus:outline-none transition-all duration-300 cursor-pointer"
                                 style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                                 title="Download CV"
                             >
@@ -113,14 +113,14 @@ export default function FirstSection() {
                         <AnimatePresence>
                         {showCV && (
                             <motion.div
-                                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+                                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.25 }}
                             >
                                 <motion.div
-                                    className="bg-[#222] rounded-lg p-4 max-w-3xl w-full relative shadow-lg"
+                                    className="bg-[#1a1a1a] rounded-lg p-4 max-w-3xl w-full relative border border-[#2a2a2a]"
                                     initial={{ scale: 0.85, opacity: 0, y: 40 }}
                                     animate={{ scale: 1, opacity: 1, y: 0 }}
                                     exit={{ scale: 0.85, opacity: 0, y: 40 }}
@@ -128,7 +128,7 @@ export default function FirstSection() {
                                 >
                                     <button
                                         onClick={() => setShowCV(false)}
-                                        className="absolute top-2 right-2 text-white text-2xl font-bold hover:text-red-400 focus:outline-none"
+                                        className="absolute top-2 right-2 text-[#a0a0a0] text-2xl font-bold hover:text-[#4a9eff] focus:outline-none"
                                         aria-label="Close CV"
                                     >
                                         <FaRegWindowClose className="hover:scale-110 transition-transform" />
