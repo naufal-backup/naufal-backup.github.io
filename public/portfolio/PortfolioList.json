@@ -28,7 +28,7 @@
         "title": "Disbox-Web",
         "description": "Discord-based file storage client Web",
         "stack": "Javascript, Tailwind CSS",
-        "url": "https://disbox-web-weld.vercel.app/",
+        "url": "https://disbox-web.pages.dev/",
         "image": "/images/Disbox-web.png"
     },
     {
