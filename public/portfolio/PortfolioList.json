@@ -12,7 +12,7 @@
         "title": "Ruang Santri",
         "description": "Website for Education",
         "stack": "Laravel, MySQL, Bootstrap, Tailwind CSS",
-        "url": "https://ruang-santri.com/",
+        "url": "https://ruang-santri.netlify.app/",
         "image": "/images/ruang-santri.png"
     },
     {
