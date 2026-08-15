@@ -4,9 +4,9 @@ import WavyText from '../components/WavyText';
 
 const socialLinks = [
     { name: "GitHub", url: "#", icon: <FaGithub /> },
-    { name: "Instagram", url: "https://www.instagram.com/naufalgastiiadirrijal/", icon: <FaInstagram /> },
-    { name: "Twitter", url: "https://twitter.com/naufalgastii", icon: <FaTwitter /> },
-    { name: "LinkedIn", url: "https://www.linkedin.com/in/naufal-gastiadirrijal-fawwaz-alamsyah-b82a1b2a1/", icon: <FaLinkedin /> }
+    { name: "Instagram", url: "https://www.instagram.com/naufalalamsyah45/", icon: <FaInstagram /> },
+    // { name: "Twitter", url: "https://twitter.com/naufalgastii", icon: <FaTwitter /> },
+    { name: "LinkedIn", url: "https://www.linkedin.com/in/naufal-g-f-alamsyah/", icon: <FaLinkedin /> }
 ];
 
 
