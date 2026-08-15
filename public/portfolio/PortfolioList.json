@@ -70,5 +70,13 @@
         "stack": "Javascript, Cloudflare Pages",
         "url": "https://invensync.pages.dev/",
         "image": "/images/invensync.png"
+    },
+    {
+        "id": 10,
+        "title": "PakanPro",
+        "description": "Toko pakan ternak online dengan detail nutrisi transparan dan pemesanan khusus",
+        "stack": "Next.js, Prisma, Cloudflare Workers, Supabase",
+        "url": "https://pakanpro.naufalalamsyah453.workers.dev/",
+        "image": "/images/Pakanpro.png"
     }
 ]
