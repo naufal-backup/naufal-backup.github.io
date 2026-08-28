@@ -5,7 +5,7 @@
         "description": "Fan-made website for Alternate Arc",
         "stack": "Laravel, MySQL, Bootstrap",
         "url": "https://github.com/naufal-backup/Alternate-Arc-Archive3",
-        "image": "/images/alternate-arc-archive.png"
+        "image": "/images/alternate-arc-archive.webp"
     },
     {
         "id": 2,
@@ -13,7 +13,7 @@
         "description": "Website for Education",
         "stack": "Laravel, MySQL, Bootstrap, Tailwind CSS",
         "url": "https://ruang-santri.netlify.app/",
-        "image": "/images/ruang-santri.png"
+        "image": "/images/ruang-santri.webp"
     },
     {
         "id": 3,
@@ -21,7 +21,7 @@
         "description": "Action Top-Down Web Game",
         "stack": "Godot Engine",
         "url": "/portfolio/project-a",
-        "image": "/images/project-a.png"
+        "image": "/images/project-a.webp"
     },
     {
         "id": 4,
@@ -29,7 +29,7 @@
         "description": "Discord-based file storage client Web",
         "stack": "Javascript, Tailwind CSS",
         "url": "https://disbox-web-e24.pages.dev/",
-        "image": "/images/Disbox-web.png"
+        "image": "/images/Disbox-web.webp"
     },
     {
         "id": 5,
@@ -37,7 +37,7 @@
         "description": "GTK Window Customization",
         "stack": "Javascript, GTK, Linux Shell Script",
         "url": "https://github.com/naufal-backup/Gtk-Theme-Customizer",
-        "image": "/images/gtk-theme-customizer.png"
+        "image": "/images/gtk-theme-customizer.webp"
     },
     {
         "id": 6,
@@ -45,7 +45,7 @@
         "description": "Portfolio Website",
         "stack": "Next.js, Tailwind CSS, Framer Motion",
         "url": "https://naufal-backup.github.io",
-        "image": "/images/this-page.png"
+        "image": "/images/this-page.webp"
     },
     {
         "id": 7,
@@ -53,7 +53,7 @@
         "description": "Discord-based file storage client Desktop",
         "stack": "Electron, Javascript, CSS",
         "url": "https://github.com/naufal-backup/disbox-linux",
-        "image": "/images/disbox-linux.png"
+        "image": "/images/disbox-linux.webp"
     },
     {
         "id": 8,
@@ -61,7 +61,7 @@
         "description": "Educational Game",
         "stack": "Unity2D",
         "url": "https://github.com/naufal-backup/Waste-Sorter",
-        "image": "/images/waste-sorter.png"
+        "image": "/images/waste-sorter.webp"
     },
     {
         "id": 9,
@@ -69,7 +69,7 @@
         "description": "Inventory Management System",
         "stack": "Javascript, Cloudflare Pages",
         "url": "https://invensync.pages.dev/",
-        "image": "/images/invensync.png"
+        "image": "/images/invensync.webp"
     },
     {
         "id": 10,
@@ -77,7 +77,7 @@
         "description": "Toko pakan ternak online dengan detail nutrisi transparan dan pemesanan khusus",
         "stack": "Next.js, Prisma, Cloudflare Workers, Supabase",
         "url": "https://pakanpro.my.id",
-        "image": "/images/Pakanpro.png"
+        "image": "/images/Pakanpro.webp"
     },
     {
         "id": 11,
@@ -85,6 +85,6 @@
         "description": "Personal website for Public Speaking, Literasi & Pengembangan Diri",
         "stack": "Next.js, Tailwind CSS",
         "url": "https://hamemayu.ac.id",
-        "image": "/images/hamemayu.png"
+        "image": "/images/hamemayu.webp"
     }
 ]

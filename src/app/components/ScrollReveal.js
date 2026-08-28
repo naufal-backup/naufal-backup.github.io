@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 const animations = {
@@ -37,37 +37,6 @@ const animations = {
   },
 };
 
-function useScrollDirection() {
-  const lastY = useRef(0);
-  const direction = useRef("down");
-
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      direction.current = y > lastY.current ? "down" : "up";
-      lastY.current = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return direction;
-}
-
-const scrollDirRef = typeof window !== "undefined" ? (() => {
-  let dir = "down";
-  let lastY = 0;
-  const onScroll = () => {
-    const y = window.scrollY;
-    dir = y > lastY ? "down" : "up";
-    lastY = y;
-  };
-  if (typeof window !== "undefined") {
-    window.addEventListener("scroll", onScroll, { passive: true });
-  }
-  return { current: dir };
-})() : { current: "down" };
-
 export default function ScrollReveal({
   children,
   animation = "fadeUp",
@@ -79,49 +48,29 @@ export default function ScrollReveal({
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once, amount: threshold });
-  const prevInView = useRef(false);
-  const hasAnimated = useRef(false);
 
   const variant = animations[animation] || animations.fadeUp;
   const isSpring = ["bounceIn", "popIn", "flipX", "slideRotate"].includes(animation);
-
-  const getTransition = (target) => {
-    if (target === "hidden") {
-      return { duration: 0.35, ease: [0.4, 0, 1, 1] };
-    }
-    if (target === "visible") {
-      return isSpring
-        ? { ...variant.visible.transition, delay }
-        : { duration, ease: [0.22, 1, 0.36, 1], delay };
-    }
-    return {};
-  };
-
-  const getTarget = () => {
-    if (isInView) {
-      hasAnimated.current = true;
-      return "visible";
-    }
-    if (hasAnimated.current && !isInView) {
-      return "hidden";
-    }
-    return "hidden";
-  };
-
-  useEffect(() => {
-    prevInView.current = isInView;
-  }, [isInView]);
 
   return (
     <motion.div
       ref={ref}
       initial="hidden"
-      animate={getTarget()}
+      animate={isInView ? "visible" : "hidden"}
       variants={{
         hidden: variant.hidden,
-        visible: variant.visible,
+        visible: {
+          ...variant.visible,
+          transition: isSpring
+            ? { ...variant.visible.transition, delay }
+            : { duration, ease: [0.22, 1, 0.36, 1], delay },
+        },
       }}
-      transition={getTransition(getTarget())}
+      transition={
+        !isInView
+          ? { duration: 0.4, ease: [0.4, 0, 1, 1] }
+          : undefined
+      }
       className={className}
     >
       {children}
@@ -132,24 +81,12 @@ export default function ScrollReveal({
 export function StaggerContainer({ children, className = "", staggerDelay = 0.08 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.1 });
-  const hasAnimated = useRef(false);
-
-  const getTarget = () => {
-    if (isInView) {
-      hasAnimated.current = true;
-      return "visible";
-    }
-    if (hasAnimated.current && !isInView) {
-      return "hidden";
-    }
-    return "hidden";
-  };
 
   return (
     <motion.div
       ref={ref}
       initial="hidden"
-      animate={getTarget()}
+      animate={isInView ? "visible" : "hidden"}
       variants={{
         hidden: {},
         visible: {
