@@ -85,6 +85,6 @@
         "description": "Personal website for Public Speaking, Literasi & Pengembangan Diri",
         "stack": "Next.js, Tailwind CSS",
         "url": "https://hamemayu.ac.id",
-        "image": "/images/hamemayu.svg"
+        "image": "/images/hamemayu.png"
     }
 ]

@@ -1,28 +1,25 @@
-import { FaGithub, FaStar, FaCodeBranch, FaUsers, FaFolder, FaLock, FaCalendarAlt } from 'react-icons/fa';
+import { FaGithub, FaUsers, FaFolder, FaStar } from 'react-icons/fa';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '../components/ScrollReveal';
 import WavyText from '../components/WavyText';
 
 const stats = [
-    { label: "Public Repos", value: "9", icon: <FaFolder size={28} className="text-[#4a9eff]" /> },
-    { label: "Private Repos", value: "16", icon: <FaLock size={28} className="text-[#a855f7]" /> },
+    { label: "Public Repos", value: "23", icon: <FaFolder size={28} className="text-[#4a9eff]" /> },
+    { label: "Stars Earned", value: "16", icon: <FaStar size={28} className="text-[#eab308]" /> },
     { label: "Followers", value: "2", icon: <FaUsers size={28} className="text-[#f97316]" /> },
-    { label: "Following", value: "6", icon: <FaUsers size={28} className="text-[#22c55e]" /> },
+    { label: "Following", value: "5", icon: <FaUsers size={28} className="text-[#22c55e]" /> },
 ];
 
 const badges = [
-    { name: "Pull Shark", desc: "Merged 2+ pull requests", emoji: "🦈" },
-    { name: "YOLO", desc: "Merged without code review", emoji: "🤠" },
-    { name: "Starstruck", desc: "Starred by repo collaborators", emoji: "🌟" },
-    { name: "Galaxy Brain", desc: "4+ threads answered", emoji: "🧠" },
-    { name: "Pair Extraordinaire", desc: "Co-authored merged PR", emoji: "👥" },
-    { name: "Quickdraw", desc: "Closed issue in < 5 min", emoji: "⚡" },
+    { name: "Starstruck", desc: "Won 16 stars on a single repo", emoji: "🌟", repo: "disbox" },
 ];
 
-const recentRepos = [
-    { name: "PakanPro", desc: "Toko pakan ternak online", lang: "Next.js", color: "#06B6D4" },
-    { name: "profil-hema", desc: "Hamemayu profile site", lang: "Next.js", color: "#06B6D4" },
-    { name: "Ruang-Santri-CF", desc: "Education platform", lang: "Cloudflare", color: "#F6821F" },
-    { name: "naufal-backup.github.io", desc: "Portfolio website", lang: "Next.js", color: "#06B6D4" },
+const pinnedRepos = [
+    { name: "disbox", desc: "Discord-based file storage", lang: "JavaScript", color: "#f1e05a", stars: 16 },
+    { name: "disbox-mobile", desc: "Disbox mobile client", lang: "JavaScript", color: "#f1e05a", stars: 0 },
+    { name: "AELauncher", desc: "App launcher", lang: "JavaScript", color: "#f1e05a", stars: 0 },
+    { name: "naufal-backup.github.io", desc: "Portfolio website", lang: "JavaScript", color: "#f1e05a", stars: 0 },
+    { name: "Gtk-Theme-Customizer", desc: "GTK window customization", lang: "JavaScript", color: "#f1e05a", stars: 0 },
+    { name: "YT-downloader", desc: "YouTube downloader", lang: "JavaScript", color: "#f1e05a", stars: 0 },
 ];
 
 export default function AchievementSection() {
@@ -61,26 +58,29 @@ export default function AchievementSection() {
                         <WavyText text="Earned Badges" />
                     </h3>
                 </ScrollReveal>
-                <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-12" staggerDelay={0.06}>
+                <StaggerContainer className="flex gap-4 mb-12" staggerDelay={0.1}>
                     {badges.map((badge) => (
                         <StaggerItem key={badge.name} animation="bounceIn">
-                            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4 text-center hover:border-[#4a9eff]/40 hover:bg-[#1f1f1f] transition-all cursor-default group">
-                                <div className="text-3xl mb-2 group-hover:scale-125 transition-transform">{badge.emoji}</div>
-                                <div className="text-sm font-semibold text-[#f5f5f5] mb-1">{badge.name}</div>
-                                <div className="text-xs text-[#808080] leading-tight">{badge.desc}</div>
+                            <div className="bg-[#1a1a1a] border border-[#eab308]/30 rounded-xl p-6 flex items-center gap-4 hover:border-[#eab308]/60 hover:bg-[#1f1f1f] transition-all cursor-default group">
+                                <div className="text-5xl group-hover:scale-125 transition-transform">{badge.emoji}</div>
+                                <div>
+                                    <div className="text-lg font-bold text-[#f5f5f5]">{badge.name}</div>
+                                    <div className="text-sm text-[#808080]">{badge.desc}</div>
+                                    <div className="text-xs text-[#eab308] mt-1">repo: {badge.repo}</div>
+                                </div>
                             </div>
                         </StaggerItem>
                     ))}
                 </StaggerContainer>
 
-                {/* Recent Repos */}
+                {/* Pinned Repos */}
                 <ScrollReveal animation="fadeRight" delay={0.2}>
                     <h3 className="text-xl font-semibold mb-6 text-[#a0a0a0]">
-                        <WavyText text="Recent Repositories" />
+                        <WavyText text="Pinned Repositories" />
                     </h3>
                 </ScrollReveal>
-                <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-3" staggerDelay={0.08}>
-                    {recentRepos.map((repo) => (
+                <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" staggerDelay={0.08}>
+                    {pinnedRepos.map((repo) => (
                         <StaggerItem key={repo.name} animation="slideRotate">
                             <a
                                 href={`https://github.com/naufal-backup/${repo.name}`}
@@ -89,13 +89,17 @@ export default function AchievementSection() {
                                 className="flex items-center gap-4 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 hover:border-[#4a9eff]/40 hover:bg-[#1f1f1f] transition-all group"
                             >
                                 <FaGithub className="text-2xl text-[#808080] group-hover:text-[#f5f5f5] transition-colors shrink-0" />
-                                <div className="min-w-0">
+                                <div className="min-w-0 flex-1">
                                     <div className="text-sm font-semibold text-[#f5f5f5] truncate">{repo.name}</div>
                                     <div className="text-xs text-[#808080] truncate">{repo.desc}</div>
                                 </div>
-                                <div className="ml-auto shrink-0 flex items-center gap-1.5">
+                                <div className="flex items-center gap-3 shrink-0">
+                                    {repo.stars > 0 && (
+                                        <span className="flex items-center gap-1 text-xs text-[#eab308]">
+                                            <FaStar size={10} /> {repo.stars}
+                                        </span>
+                                    )}
                                     <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: repo.color }}></span>
-                                    <span className="text-xs text-[#808080]">{repo.lang}</span>
                                 </div>
                             </a>
                         </StaggerItem>
