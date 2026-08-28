@@ -1,6 +1,6 @@
 "use client";
-import { useRef, useState, useEffect, useCallback } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useRef, useState, useEffect, useContext, createContext, useCallback } from 'react';
+import { motion } from 'framer-motion';
 
 const animations = {
   fadeUp: {
@@ -37,38 +37,80 @@ const animations = {
   },
 };
 
-function useScrollState(threshold = 0.15) {
-  const ref = useRef(null);
-  const [state, setState] = useState("hidden");
-  const prevScrollY = useRef(0);
-  const observerRef = useRef(null);
-  const isVisibleRef = useRef(false);
+const ScrollContext = createContext(null);
+
+function useScrollRegistry() {
+  const registry = useRef(new Map());
+  const ticking = useRef(false);
+
+  const checkAll = useCallback(() => {
+    const vh = window.innerHeight;
+    registry.current.forEach((entry) => {
+      const rect = entry.el.getBoundingClientRect();
+      const top = rect.top;
+      const bottom = rect.bottom;
+      const thresholdPx = entry.threshold * vh;
+
+      const nowInView = bottom > thresholdPx && top < vh - thresholdPx;
+      const wasInView = entry.wasInView;
+
+      if (nowInView && !wasInView) {
+        entry.wasInView = true;
+        entry.setState("visible");
+      } else if (!nowInView && wasInView) {
+        entry.wasInView = false;
+        entry.setState("hidden");
+      }
+    });
+  }, []);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const onScroll = () => {
+      if (!ticking.current) {
+        ticking.current = true;
+        requestAnimationFrame(() => {
+          checkAll();
+          ticking.current = false;
+        });
+      }
+    };
 
-    observerRef.current = new IntersectionObserver(
-      ([entry]) => {
-        const wasVisible = isVisibleRef.current;
-        const nowVisible = entry.isIntersecting;
-        isVisibleRef.current = nowVisible;
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
 
-        if (nowVisible && !wasVisible) {
-          setState("visible");
-        } else if (!nowVisible && wasVisible) {
-          setState("hidden");
-        }
-      },
-      { threshold, rootMargin: "0px 0px -50px 0px" }
-    );
+    checkAll();
 
-    observerRef.current.observe(el);
-    return () => observerRef.current?.disconnect();
-  }, [threshold]);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [checkAll]);
 
-  return [ref, state];
+  const register = useCallback((id, el, setState, threshold) => {
+    registry.current.set(id, {
+      el,
+      setState,
+      threshold,
+      wasInView: false,
+    });
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const thresholdPx = threshold * vh;
+    const initiallyInView = rect.bottom > thresholdPx && rect.top < vh - thresholdPx;
+    if (initiallyInView) {
+      registry.current.get(id).wasInView = true;
+      setState("visible");
+    }
+  }, []);
+
+  const unregister = useCallback((id) => {
+    registry.current.delete(id);
+  }, []);
+
+  return { register, unregister };
 }
+
+let nextId = 0;
 
 export default function ScrollReveal({
   children,
@@ -79,9 +121,6 @@ export default function ScrollReveal({
   once = false,
   threshold = 0.15,
 }) {
-  const variant = animations[animation] || animations.fadeUp;
-  const isSpring = ["bounceIn", "popIn", "flipX", "slideRotate"].includes(animation);
-
   if (once) {
     return (
       <ScrollRevealOnce
@@ -110,75 +149,23 @@ export default function ScrollReveal({
 }
 
 function ScrollRevealOnce({ children, animation, delay, duration, className, threshold }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: threshold });
-  const variant = animations[animation] || animations.fadeUp;
-  const isSpring = ["bounceIn", "popIn", "flipX", "slideRotate"].includes(animation);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={{
-        hidden: variant.hidden,
-        visible: {
-          ...variant.visible,
-          transition: isSpring
-            ? { ...variant.visible.transition, delay }
-            : { duration, ease: [0.22, 1, 0.36, 1], delay },
-        },
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function ScrollRevealRepeat({ children, animation, delay, duration, className, threshold }) {
-  const containerRef = useRef(null);
   const [state, setState] = useState("hidden");
-  const isVisibleRef = useRef(false);
-  const isInitialRef = useRef(true);
+  const elRef = useRef(null);
+  const idRef = useRef(nextId++);
+  const ctx = useContext(ScrollContext);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const wasVisible = isVisibleRef.current;
-        const nowVisible = entry.isIntersecting;
-        isVisibleRef.current = nowVisible;
-
-        if (isInitialRef.current) {
-          isInitialRef.current = false;
-          if (!nowVisible) {
-            setState("hidden");
-          }
-          return;
-        }
-
-        if (nowVisible && !wasVisible) {
-          setState("visible");
-        } else if (!nowVisible && wasVisible) {
-          setState("hidden");
-        }
-      },
-      { threshold, rootMargin: "0px 0px -60px 0px" }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [threshold]);
+    if (!ctx || !elRef.current) return;
+    ctx.register(idRef.current, elRef.current, setState, threshold);
+    return () => ctx.unregister(idRef.current);
+  }, [ctx, threshold]);
 
   const variant = animations[animation] || animations.fadeUp;
   const isSpring = ["bounceIn", "popIn", "flipX", "slideRotate"].includes(animation);
 
   return (
     <motion.div
-      ref={containerRef}
+      ref={elRef}
       initial="hidden"
       animate={state}
       variants={{
@@ -191,7 +178,7 @@ function ScrollRevealRepeat({ children, animation, delay, duration, className, t
         },
       }}
       transition={
-        state === "hidden" && !isInitialRef.current
+        state === "hidden"
           ? { duration: 0.4, ease: [0.4, 0, 1, 1] }
           : undefined
       }
@@ -202,44 +189,71 @@ function ScrollRevealRepeat({ children, animation, delay, duration, className, t
   );
 }
 
-export function StaggerContainer({ children, className = "", staggerDelay = 0.08 }) {
-  const containerRef = useRef(null);
+function ScrollRevealRepeat({ children, animation, delay, duration, className, threshold }) {
   const [state, setState] = useState("hidden");
-  const isVisibleRef = useRef(false);
-  const isInitialRef = useRef(true);
+  const elRef = useRef(null);
+  const idRef = useRef(nextId++);
+  const ctx = useContext(ScrollContext);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+    if (!ctx || !elRef.current) return;
+    ctx.register(idRef.current, elRef.current, setState, threshold);
+    return () => ctx.unregister(idRef.current);
+  }, [ctx, threshold]);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const wasVisible = isVisibleRef.current;
-        const nowVisible = entry.isIntersecting;
-        isVisibleRef.current = nowVisible;
-
-        if (isInitialRef.current) {
-          isInitialRef.current = false;
-          if (!nowVisible) setState("hidden");
-          return;
-        }
-
-        if (nowVisible && !wasVisible) {
-          setState("visible");
-        } else if (!nowVisible && wasVisible) {
-          setState("hidden");
-        }
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -60px 0px" }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const variant = animations[animation] || animations.fadeUp;
+  const isSpring = ["bounceIn", "popIn", "flipX", "slideRotate"].includes(animation);
 
   return (
     <motion.div
-      ref={containerRef}
+      ref={elRef}
+      initial="hidden"
+      animate={state}
+      variants={{
+        hidden: variant.hidden,
+        visible: {
+          ...variant.visible,
+          transition: isSpring
+            ? { ...variant.visible.transition, delay }
+            : { duration, ease: [0.22, 1, 0.36, 1], delay },
+        },
+      }}
+      transition={
+        state === "hidden"
+          ? { duration: 0.4, ease: [0.4, 0, 1, 1] }
+          : undefined
+      }
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function ScrollProvider({ children }) {
+  const { register, unregister } = useScrollRegistry();
+  return (
+    <ScrollContext.Provider value={{ register, unregister }}>
+      {children}
+    </ScrollContext.Provider>
+  );
+}
+
+export function StaggerContainer({ children, className = "", staggerDelay = 0.08 }) {
+  const [state, setState] = useState("hidden");
+  const elRef = useRef(null);
+  const idRef = useRef(nextId++);
+  const ctx = useContext(ScrollContext);
+
+  useEffect(() => {
+    if (!ctx || !elRef.current) return;
+    ctx.register(idRef.current, elRef.current, setState, 0.1);
+    return () => ctx.unregister(idRef.current);
+  }, [ctx]);
+
+  return (
+    <motion.div
+      ref={elRef}
       initial="hidden"
       animate={state}
       variants={{
