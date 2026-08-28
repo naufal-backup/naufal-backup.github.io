@@ -76,7 +76,7 @@
         "title": "PakanPro",
         "description": "Toko pakan ternak online dengan detail nutrisi transparan dan pemesanan khusus",
         "stack": "Next.js, Prisma, Cloudflare Workers, Supabase",
-        "url": "https://pakanpro.naufalalamsyah453.workers.dev/",
+        "url": "https://pakanpro.my.id",
         "image": "/images/Pakanpro.png"
     },
     {
