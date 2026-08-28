@@ -43,7 +43,7 @@ export default function ScrollReveal({
   delay = 0,
   duration = 0.6,
   className = "",
-  once = true,
+  once = false,
   threshold = 0.15,
 }) {
   const ref = useRef(null);
@@ -75,7 +75,7 @@ export default function ScrollReveal({
 
 export function StaggerContainer({ children, className = "", staggerDelay = 0.08 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
+  const isInView = useInView(ref, { once: false, amount: 0.1 });
 
   return (
     <motion.div
