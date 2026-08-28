@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 const animations = {
@@ -37,6 +37,39 @@ const animations = {
   },
 };
 
+function useScrollState(threshold = 0.15) {
+  const ref = useRef(null);
+  const [state, setState] = useState("hidden");
+  const prevScrollY = useRef(0);
+  const observerRef = useRef(null);
+  const isVisibleRef = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    observerRef.current = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisibleRef.current;
+        const nowVisible = entry.isIntersecting;
+        isVisibleRef.current = nowVisible;
+
+        if (nowVisible && !wasVisible) {
+          setState("visible");
+        } else if (!nowVisible && wasVisible) {
+          setState("hidden");
+        }
+      },
+      { threshold, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    observerRef.current.observe(el);
+    return () => observerRef.current?.disconnect();
+  }, [threshold]);
+
+  return [ref, state];
+}
+
 export default function ScrollReveal({
   children,
   animation = "fadeUp",
@@ -46,9 +79,39 @@ export default function ScrollReveal({
   once = false,
   threshold = 0.15,
 }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once, amount: threshold });
+  const variant = animations[animation] || animations.fadeUp;
+  const isSpring = ["bounceIn", "popIn", "flipX", "slideRotate"].includes(animation);
 
+  if (once) {
+    return (
+      <ScrollRevealOnce
+        animation={animation}
+        delay={delay}
+        duration={duration}
+        className={className}
+        threshold={threshold}
+      >
+        {children}
+      </ScrollRevealOnce>
+    );
+  }
+
+  return (
+    <ScrollRevealRepeat
+      animation={animation}
+      delay={delay}
+      duration={duration}
+      className={className}
+      threshold={threshold}
+    >
+      {children}
+    </ScrollRevealRepeat>
+  );
+}
+
+function ScrollRevealOnce({ children, animation, delay, duration, className, threshold }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: threshold });
   const variant = animations[animation] || animations.fadeUp;
   const isSpring = ["bounceIn", "popIn", "flipX", "slideRotate"].includes(animation);
 
@@ -66,8 +129,69 @@ export default function ScrollReveal({
             : { duration, ease: [0.22, 1, 0.36, 1], delay },
         },
       }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function ScrollRevealRepeat({ children, animation, delay, duration, className, threshold }) {
+  const containerRef = useRef(null);
+  const [state, setState] = useState("hidden");
+  const isVisibleRef = useRef(false);
+  const isInitialRef = useRef(true);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisibleRef.current;
+        const nowVisible = entry.isIntersecting;
+        isVisibleRef.current = nowVisible;
+
+        if (isInitialRef.current) {
+          isInitialRef.current = false;
+          if (!nowVisible) {
+            setState("hidden");
+          }
+          return;
+        }
+
+        if (nowVisible && !wasVisible) {
+          setState("visible");
+        } else if (!nowVisible && wasVisible) {
+          setState("hidden");
+        }
+      },
+      { threshold, rootMargin: "0px 0px -60px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  const variant = animations[animation] || animations.fadeUp;
+  const isSpring = ["bounceIn", "popIn", "flipX", "slideRotate"].includes(animation);
+
+  return (
+    <motion.div
+      ref={containerRef}
+      initial="hidden"
+      animate={state}
+      variants={{
+        hidden: variant.hidden,
+        visible: {
+          ...variant.visible,
+          transition: isSpring
+            ? { ...variant.visible.transition, delay }
+            : { duration, ease: [0.22, 1, 0.36, 1], delay },
+        },
+      }}
       transition={
-        !isInView
+        state === "hidden" && !isInitialRef.current
           ? { duration: 0.4, ease: [0.4, 0, 1, 1] }
           : undefined
       }
@@ -79,14 +203,45 @@ export default function ScrollReveal({
 }
 
 export function StaggerContainer({ children, className = "", staggerDelay = 0.08 }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.1 });
+  const containerRef = useRef(null);
+  const [state, setState] = useState("hidden");
+  const isVisibleRef = useRef(false);
+  const isInitialRef = useRef(true);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisibleRef.current;
+        const nowVisible = entry.isIntersecting;
+        isVisibleRef.current = nowVisible;
+
+        if (isInitialRef.current) {
+          isInitialRef.current = false;
+          if (!nowVisible) setState("hidden");
+          return;
+        }
+
+        if (nowVisible && !wasVisible) {
+          setState("visible");
+        } else if (!nowVisible && wasVisible) {
+          setState("hidden");
+        }
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -60px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <motion.div
-      ref={ref}
+      ref={containerRef}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate={state}
       variants={{
         hidden: {},
         visible: {
