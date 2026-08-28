@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaGithub, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTiktok } from "react-icons/fa";
 import WavyText from '../components/WavyText';
+import ScrollReveal, { StaggerContainer, StaggerItem } from '../components/ScrollReveal';
 
 const socialLinks = [
     { name: "GitHub", url: "#", icon: <FaGithub /> },
@@ -25,34 +26,39 @@ export default function FourthSection() {
     return (
         <section id="social" className="min-h-screen flex items-center justify-center px-6 md:px-12 bg-[#0a0a0a]">
                 <div className="max-w-4xl w-full text-center">
-                    <h2 className="text-4xl md:text-5xl font-bold mb-8 text-[#f5f5f5]">
-                        <WavyText text="Let's Connect" />
-                    </h2>
-                    <p className="text-lg text-[#a0a0a0] mb-12 max-w-2xl mx-auto">
-                        <WavyText text="Feel free to reach out for collaborations, opportunities, or just to say hello!" />
-                    </p>
-                    <div className="flex flex-wrap justify-center gap-6 mb-12 ">
+                    <ScrollReveal animation="fadeUp">
+                        <h2 className="text-4xl md:text-5xl font-bold mb-8 text-[#f5f5f5]">
+                            <WavyText text="Let's Connect" />
+                        </h2>
+                    </ScrollReveal>
+                    <ScrollReveal animation="fadeUp" delay={0.1}>
+                        <p className="text-lg text-[#a0a0a0] mb-12 max-w-2xl mx-auto">
+                            <WavyText text="Feel free to reach out for collaborations, opportunities, or just to say hello!" />
+                        </p>
+                    </ScrollReveal>
+                    <StaggerContainer className="flex flex-wrap justify-center gap-6 mb-12" staggerDelay={0.12}>
                         {socialLinks.map((link) => (
-                            <a
-                                key={link.name}
-                                href={link.name === "GitHub" ? "#" : link.url}
-                                onClick={(e) => {
-                                    if (link.name === "GitHub") {
-                                        e.preventDefault();
-                                        toggleGithubPopup();
-                                    }
-                                }}
-                                target={link.name === "GitHub" ? "_self" : "_blank"}
-                                rel="noopener noreferrer"
-                                className="flex flex-col items-center justify-center w-32 h-32 bg-[#1a1a1a] hover:bg-[#242424] rounded-lg transition-all duration-300 hover:transform hover:scale-110 group cursor-pointer border border-[#2a2a2a]"
-                            >
-                                <span className="text-4xl mb-2 group-hover:scale-125 transition-transform duration-300">
-                                    {link.icon}
-                                </span>
-                                <span className="text-sm text-[#a0a0a0]">{link.name}</span>
-                            </a>
+                            <StaggerItem key={link.name} animation="bounceIn">
+                                <a
+                                    href={link.name === "GitHub" ? "#" : link.url}
+                                    onClick={(e) => {
+                                        if (link.name === "GitHub") {
+                                            e.preventDefault();
+                                            toggleGithubPopup();
+                                        }
+                                    }}
+                                    target={link.name === "GitHub" ? "_self" : "_blank"}
+                                    rel="noopener noreferrer"
+                                    className="flex flex-col items-center justify-center w-32 h-32 bg-[#1a1a1a] hover:bg-[#242424] rounded-lg transition-all duration-300 hover:transform hover:scale-110 group cursor-pointer border border-[#2a2a2a]"
+                                >
+                                    <span className="text-4xl mb-2 group-hover:scale-125 transition-transform duration-300">
+                                        {link.icon}
+                                    </span>
+                                    <span className="text-sm text-[#a0a0a0]">{link.name}</span>
+                                </a>
+                            </StaggerItem>
                         ))}
-                    </div>
+                    </StaggerContainer>
 
                     {/* GitHub Popup */}
                     {showGithubPopup && (
@@ -95,14 +101,16 @@ export default function FourthSection() {
                             </div>
                         </div>
                     )}
-                                        <div className="text-[#808080] text-sm mt-4 select-text">
+                                        <ScrollReveal animation="fadeUp" delay={0.3}>
+                                            <div className="text-[#808080] text-sm mt-4 select-text">
                                                 <p
                                                     style={{ userSelect: 'text', cursor: 'text' }}
                                                     onDoubleClick={() => setShowSecretPopup(true)}
                                                 >
                                                     © 2026 Naufal Gastiadirrijal Fawwaz Alamsyah. All rights reserved.
                                                 </p>
-                                        </div>
+                                            </div>
+                                        </ScrollReveal>
                                         {/* Secret Popup */}
                                         {showSecretPopup && (
                                             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm" onClick={() => {

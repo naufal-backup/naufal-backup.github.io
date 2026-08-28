@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SiPython, SiFigma, SiLaravel, SiMysql, SiBootstrap, SiTailwindcss, SiGodotengine, SiJavascript, SiGtk, SiGnubash, SiNextdotjs, SiUnity, SiFramer, SiElectron, SiCss3 } from 'react-icons/si';
 import WavyText from '../components/WavyText';
+import ScrollReveal, { StaggerContainer, StaggerItem } from '../components/ScrollReveal';
 
 // --- HELPER FUNCTIONS & CONSTANTS ---
 
@@ -175,45 +176,53 @@ export default function ThirdSection({ portfolioItems }) {
     return (
         <section id="portfolio" className="min-h-screen py-12 px-6 md:px-12 bg-[#0f0f0f]">
             <div className="max-w-6xl mx-auto">
-                <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center text-[#f5f5f5]">
-                    <WavyText text="Portfolio" className="border-b border-[#2a2a2a] pb-2"/>
-                </h2>
+                <ScrollReveal animation="fadeUp">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center text-[#f5f5f5]">
+                        <WavyText text="Portfolio" className="border-b border-[#2a2a2a] pb-2"/>
+                    </h2>
+                </ScrollReveal>
                 
                 {livePreviewItems.length > 0 && (
                     <div className="mb-16">
-                        <h3 className="text-2xl md:text-3xl font-bold mb-12 text-center text-[#a0a0a0]">
-                            <WavyText text="Live Preview" />
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <ScrollReveal animation="fadeDown" delay={0.1}>
+                            <h3 className="text-2xl md:text-3xl font-bold mb-12 text-center text-[#a0a0a0]">
+                                <WavyText text="Live Preview" />
+                            </h3>
+                        </ScrollReveal>
+                        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" staggerDelay={0.1}>
                             {livePreviewItems.map((item) => (
-                                <PortfolioCard 
-                                    key={item.id} 
-                                    item={item} 
-                                    hoveredId={hoveredId} 
-                                    setHoveredId={setHoveredId} 
-                                    columns={columns} 
-                                />
+                                <StaggerItem key={item.id} animation="slideRotate">
+                                    <PortfolioCard 
+                                        item={item} 
+                                        hoveredId={hoveredId} 
+                                        setHoveredId={setHoveredId} 
+                                        columns={columns} 
+                                    />
+                                </StaggerItem>
                             ))}
-                        </div>
+                        </StaggerContainer>
                     </div>
                 )}
 
                 {githubItems.length > 0 && (
                     <div className="mb-12">
-                        <h3 className="text-2xl md:text-3xl font-bold mb-12 text-center text-[#a0a0a0]">
-                            <WavyText text="GitHub Repository" />
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+                        <ScrollReveal animation="fadeDown" delay={0.15}>
+                            <h3 className="text-2xl md:text-3xl font-bold mb-12 text-center text-[#a0a0a0]">
+                                <WavyText text="GitHub Repository" />
+                            </h3>
+                        </ScrollReveal>
+                        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 " staggerDelay={0.1}>
                             {githubItems.map((item) => (
-                                <PortfolioCard 
-                                    key={item.id} 
-                                    item={item} 
-                                    hoveredId={hoveredId} 
-                                    setHoveredId={setHoveredId} 
-                                    columns={columns} 
-                                />
+                                <StaggerItem key={item.id} animation="popIn">
+                                    <PortfolioCard 
+                                        item={item} 
+                                        hoveredId={hoveredId} 
+                                        setHoveredId={setHoveredId} 
+                                        columns={columns} 
+                                    />
+                                </StaggerItem>
                             ))}
-                        </div>
+                        </StaggerContainer>
                     </div>
                 )}
             </div>
