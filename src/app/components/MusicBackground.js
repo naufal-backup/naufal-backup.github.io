@@ -38,6 +38,20 @@ export default function MusicBackground({ isMusicPlaying, toggleMusic, musicErro
     }, [showSongList]);
 
     return (
+        <>
+        {/* Play Game button - fixed tengah vertikal kanan, neobrutalism kuning */}
+        <Link
+            href="/portfolio/brutal-rush"
+            title="Play Brutal Rush"
+            className="fixed top-1/2 right-4 -translate-y-1/2 z-50 flex items-center justify-center w-12 h-12 rounded-full transition-transform duration-200 hover:scale-110 active:scale-95"
+            style={{
+                background: '#FFE500',
+                border: '3px solid #111',
+                boxShadow: '4px 4px 0px #111',
+            }}
+        >
+            <FaPlay className="text-[#111] text-sm pl-0.5" />
+        </Link>
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
             {/* Song selection popup */}
             <div className="relative w-full flex flex-col items-end">
@@ -78,20 +92,6 @@ export default function MusicBackground({ isMusicPlaying, toggleMusic, musicErro
                         {musicError}
                     </div>
                 )}
-                {/* Play Game button - sejajar vertikal di atas tombol music */}
-                <Link
-                    href="/portfolio/brutal-rush"
-                    title="Play Brutal Rush"
-                    className="relative flex items-center justify-center w-12 h-12 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 self-end"
-                    style={{
-                        background: 'rgba(40, 40, 40, 0.85)',
-                        border: '1px solid rgba(255,255,255,0.15)',
-                        backdropFilter: 'blur(8px)',
-                        boxShadow: '0 4px 15px rgba(0,0,0,0.4)',
-                    }}
-                >
-                    <FaPlay className="text-white pl-0.5" />
-                </Link>
                 <div className="flex gap-2">
                     <label
                         title="Pilih Lagu"
@@ -149,5 +149,6 @@ export default function MusicBackground({ isMusicPlaying, toggleMusic, musicErro
                 </div>
             </div>
         </div>
+        </>
     );
 }
