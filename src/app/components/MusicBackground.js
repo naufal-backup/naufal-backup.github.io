@@ -3,12 +3,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { FaVolumeUp, FaVolumeMute, FaMusic, FaPlay } from 'react-icons/fa';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function MusicBackground({ isMusicPlaying, toggleMusic, musicError, songs = [], currentSong, onSongChange }) {
     const [showSongList, setShowSongList] = useState(false);
-    const [isTransitioning, setIsTransitioning] = useState(false);
     const popupRef = useRef(null);
     const router = useRouter();
 
@@ -42,23 +40,9 @@ export default function MusicBackground({ isMusicPlaying, toggleMusic, musicErro
 
     return (
         <>
-        {/* Slide transition overlay */}
-        <div
-            className={`fixed inset-0 z-[9999] pointer-events-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                isTransitioning ? 'translate-x-0' : 'translate-x-full'
-            }`}
-            style={{ background: '#FFE500' }}
-        >
-            <div className="w-full h-full flex items-center justify-center">
-                <FaPlay className="text-[#111] text-5xl animate-pulse" />
-            </div>
-        </div>
         {/* Play Game button - fixed tengah vertikal kanan, neobrutalism kuning */}
         <button
-            onClick={() => {
-                setIsTransitioning(true);
-                setTimeout(() => router.push('/portfolio/brutal-rush'), 500);
-            }}
+            onClick={() => router.push('/portfolio/brutal-rush')}
             title="Play Brutal Rush"
             className="fixed top-1/2 right-4 -translate-y-1/2 z-50 flex items-center justify-center w-12 h-12 rounded-full transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
             style={{

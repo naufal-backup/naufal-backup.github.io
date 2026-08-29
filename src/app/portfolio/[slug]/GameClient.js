@@ -3,36 +3,21 @@
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMousePointer, FaPlay } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMousePointer } from "react-icons/fa";
 
 export default function GameClient({ slug }) {
     const iframeRef = useRef(null);
     const [isMobile, setIsMobile] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const [isActionActive, setIsActionActive] = useState(false);
-    const [showEntryOverlay, setShowEntryOverlay] = useState(false);
     const [isExiting, setIsExiting] = useState(false);
+    const [isReady, setIsReady] = useState(false);
     const router = useRouter();
-    const isBackNav = useRef(false);
 
-    // useLayoutEffect runs BEFORE browser paint — no flicker
+    // Slide in on mount
     useLayoutEffect(() => {
-        isBackNav.current = !!sessionStorage.getItem('fromGame');
-        if (isBackNav.current) {
-            sessionStorage.removeItem('fromGame');
-            setShowEntryOverlay(false);
-        } else {
-            setShowEntryOverlay(true);
-        }
+        setIsReady(true);
     }, []);
-
-    // Hide entry overlay after delay (forward nav only)
-    useEffect(() => {
-        if (showEntryOverlay) {
-            const timer = setTimeout(() => setShowEntryOverlay(false), 500);
-            return () => clearTimeout(timer);
-        }
-    }, [showEntryOverlay]);
 
     useEffect(() => {
         const checkMobile = () => {
@@ -107,30 +92,12 @@ export default function GameClient({ slug }) {
     };
 
     return (
-        <div className="w-full h-screen bg-black flex items-center justify-center relative">
-            {/* Entry transition overlay */}
-            <div
-                className={`fixed inset-0 z-[9999] flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    isExiting ? 'translate-x-0' : showEntryOverlay ? 'translate-x-0' : '-translate-x-full'
-                }`}
-                style={{ background: '#FFE500' }}
-            >
-                <FaArrowLeft className="text-[#111] text-5xl animate-pulse" />
-            </div>
-            {/* Back transition overlay - slide in from left */}
-            <div
-                className={`fixed inset-0 z-[9998] flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    isExiting ? 'translate-x-0' : '-translate-x-full'
-                }`}
-                style={{ background: '#FFE500' }}
-            >
-                <FaArrowLeft className="text-[#111] text-5xl animate-pulse" />
-            </div>
+        <div className={`w-full h-screen bg-black flex items-center justify-center relative transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isReady && !isExiting ? 'translate-x-0' : isExiting ? 'translate-x-full' : 'translate-x-full'
+        }`}>
             {/* Back Button */}
-            {!isExiting && (
             <button
                 onClick={() => {
-                    sessionStorage.setItem('fromGame', 'true');
                     setIsExiting(true);
                     setTimeout(() => router.push('/'), 500);
                 }}
@@ -139,7 +106,6 @@ export default function GameClient({ slug }) {
             >
                 <FaArrowLeft size={18} />
             </button>
-            )}
             {/* Loading indicator - Show until loaded */}
             {!isLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black z-10 pointer-events-none">
