@@ -115,6 +115,7 @@ export default function GameClient({ slug }) {
             {/* Back Button */}
             <button
                 onClick={() => {
+                    sessionStorage.setItem('fromGame', 'true');
                     setIsExiting(true);
                     setTimeout(() => router.push('/'), 500);
                 }}
