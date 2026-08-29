@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMousePointer } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMousePointer, FaPlay } from "react-icons/fa";
 
 export default function GameClient({ slug }) {
     const iframeRef = useRef(null);
@@ -117,7 +117,7 @@ export default function GameClient({ slug }) {
             {isLoaded && isMobile && (
                 <div className="absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-20 px-6">
                     <div 
-                        className="flex items-end pointer-events-auto w-fit" 
+                        className="flex items-end justify-between pointer-events-auto w-full" 
                         onContextMenu={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -165,9 +165,9 @@ export default function GameClient({ slug }) {
                             </button>
                         </div>
 
-                        {/* Action Button (Left Click) */}
-                        {/* <button
-                            className="w-20 h-20 bg-red-500/50 backdrop-blur-md rounded-full flex items-center justify-center active:bg-red-500/70 touch-none select-none"
+                        {/* Action Button (Left Click / Play) - Posisi bottom right (seperti mute button) */}
+                        <button
+                            className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center active:bg-white/40 touch-none select-none"
                             onTouchStart={() => simulateClick("mousedown")}
                             onTouchEnd={() => {
                                 simulateClick("mouseup");
@@ -179,8 +179,8 @@ export default function GameClient({ slug }) {
                                 simulateClick("click");
                             }}
                         >
-                            <FaMousePointer className="text-white text-2xl" />
-                        </button> */}
+                            <FaPlay className="text-white text-xl" />
+                        </button>
                     </div>
                 </div>
             )}
