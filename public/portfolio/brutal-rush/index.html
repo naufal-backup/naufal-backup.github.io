@@ -662,35 +662,37 @@ function updatePlayer() {
 // --- COLLISION DETECTION ---
 function checkCollisions() {
   const p = player;
-  const pw = PLAYER_WIDTH - 10; // Slightly forgiving hitbox
-  let ph = p.isSliding ? PLAYER_HEIGHT / 2.5 : PLAYER_HEIGHT;
-  const py = p.isSliding ? GROUND_Y - ph : p.y;
-  const px = p.x - pw / 2;
+  
+  // Make player hitbox slightly smaller horizontally for forgiving gameplay
+  const hitBoxW = PLAYER_WIDTH * 0.5; // Only core body triggers collision
+  let ph = p.isSliding ? PLAYER_HEIGHT / 2.5 : PLAYER_HEIGHT - 5; // Slightly lower height
+  const py = p.isSliding ? GROUND_Y - ph : p.y + 5; // Shift down slightly
+  const px = p.x - hitBoxW / 2;
 
   for (const o of obstacles) {
     let ox, oy, ow, oh;
+    
+    // Forgiving obstacle hitboxes (reduce by 20%)
+    const marginW = o.w * 0.15;
+    const marginH = o.h * 0.15;
+
     if (o.type === 'lowBar') {
-      ox = o.x - o.w / 2;
-      oy = GROUND_Y - 65;
-      ow = o.w;
-      oh = o.h;
+      ox = (o.x - o.w / 2) + marginW;
+      oy = (GROUND_Y - 65) + marginH;
+      ow = o.w - (marginW * 2);
+      oh = o.h - (marginH * 2);
       // Low bar — only hits if NOT sliding
       if (p.isSliding) continue;
-      // Check y overlap
-      if (oy + oh < py || oy > py + ph) continue;
     } else {
-      ox = o.x - o.w / 2;
-      oy = o.y;
-      ow = o.w;
-      oh = o.h;
+      ox = (o.x - o.w / 2) + marginW;
+      oy = o.y + marginH;
+      ow = o.w - (marginW * 2);
+      oh = o.h - (marginH * 2);
     }
 
-    // AABB collision
-    if (px < ox + ow && px + pw > ox && py < oy + oh && py + ph > oy) {
-      // Same lane check (generous)
-      if (Math.abs(p.x - o.x) < LANE_WIDTH * 0.6) {
-        return true;
-      }
+    // Strict AABB collision (no weird lane guessing)
+    if (px < ox + ow && px + hitBoxW > ox && py < oy + oh && py + ph > oy) {
+      return true;
     }
   }
 
