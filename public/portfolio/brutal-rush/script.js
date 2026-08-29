@@ -352,10 +352,6 @@ function drawBrutalText(text, x, y, size, color, align, shadow) {
   ctx.font = `700 ${size}px 'Space Grotesk', 'Arial Black', sans-serif`;
   ctx.textAlign = align || 'center';
   ctx.textBaseline = 'middle';
-  if (shadow !== false) {
-    ctx.fillStyle = BLACK;
-    ctx.fillText(text, x + 3, y + 3);
-  }
   ctx.fillStyle = color || WHITE;
   ctx.fillText(text, x, y);
 }
@@ -364,8 +360,6 @@ function drawMonoText(text, x, y, size, color, align) {
   ctx.font = `700 ${size}px 'Space Mono', monospace`;
   ctx.textAlign = align || 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = BLACK;
-  ctx.fillText(text, x + 2, y + 2);
   ctx.fillStyle = color || WHITE;
   ctx.fillText(text, x, y);
 }
@@ -1080,14 +1074,10 @@ function drawMenu() {
   ctx.font = "700 52px 'Space Grotesk', 'Arial Black', sans-serif";
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = BLACK;
-  ctx.fillText('BRUTAL', W / 2 + 3, titleY - 18 + 3);
   ctx.fillStyle = '#FF3B3B';
   ctx.fillText('BRUTAL', W / 2, titleY - 18);
 
   ctx.font = "700 58px 'Space Grotesk', 'Arial Black', sans-serif";
-  ctx.fillStyle = BLACK;
-  ctx.fillText('RUSH', W / 2 + 3, titleY + 32 + 3);
   ctx.fillStyle = '#2B6EFF';
   ctx.fillText('RUSH', W / 2, titleY + 32);
 
