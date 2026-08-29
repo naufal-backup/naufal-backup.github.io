@@ -804,16 +804,16 @@ function checkCollisions() {
       oy = (GROUND_Y - 65) + marginH;
       ow = o.w - (marginW * 2);
       oh = o.h - (marginH * 2);
-      // Low bar — ignore completely if sliding
-      if (p.isSliding) {
-        if (!o.passed && Math.abs(p.x - o.x) < LANE_WIDTH * 0.6) {
-          o.passed = true;
-          score += NEAR_MISS_BONUS;
-          spawnFloatingText(o.x, o.y - 10, '+' + NEAR_MISS_BONUS, '#00C853');
-          playSound('nearmiss');
-        }
-        continue;
+      
+      // Low bar is just a warning / decoration now. Never lethal.
+      // We process a near-miss bonus if sliding under it, but never return true (death).
+      if (p.isSliding && !o.passed && Math.abs(p.x - o.x) < LANE_WIDTH * 0.6) {
+         o.passed = true;
+         score += NEAR_MISS_BONUS;
+         spawnFloatingText(o.x, o.y - 10, '+' + NEAR_MISS_BONUS, '#00C853');
+         playSound('nearmiss');
       }
+      continue; // Skip the rest of collision logic for this object
     } else {
       ox = (o.x - o.w / 2) + marginW;
       oy = o.y + marginH;
