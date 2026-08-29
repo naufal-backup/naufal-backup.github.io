@@ -4,10 +4,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaVolumeUp, FaVolumeMute, FaMusic, FaPlay } from 'react-icons/fa';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function MusicBackground({ isMusicPlaying, toggleMusic, musicError, songs = [], currentSong, onSongChange }) {
     const [showSongList, setShowSongList] = useState(false);
+    const [isTransitioning, setIsTransitioning] = useState(false);
     const popupRef = useRef(null);
+    const router = useRouter();
 
     // Close popup on click outside or scroll
     useEffect(() => {
@@ -39,11 +42,25 @@ export default function MusicBackground({ isMusicPlaying, toggleMusic, musicErro
 
     return (
         <>
+        {/* Slide transition overlay */}
+        <div
+            className={`fixed inset-0 z-[9999] pointer-events-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                isTransitioning ? 'translate-x-0' : 'translate-x-full'
+            }`}
+            style={{ background: '#FFE500' }}
+        >
+            <div className="w-full h-full flex items-center justify-center">
+                <FaPlay className="text-[#111] text-5xl animate-pulse" />
+            </div>
+        </div>
         {/* Play Game button - fixed tengah vertikal kanan, neobrutalism kuning */}
-        <Link
-            href="/portfolio/brutal-rush"
+        <button
+            onClick={() => {
+                setIsTransitioning(true);
+                setTimeout(() => router.push('/portfolio/brutal-rush'), 500);
+            }}
             title="Play Brutal Rush"
-            className="fixed top-1/2 right-4 -translate-y-1/2 z-50 flex items-center justify-center w-12 h-12 rounded-full transition-transform duration-200 hover:scale-110 active:scale-95"
+            className="fixed top-1/2 right-4 -translate-y-1/2 z-50 flex items-center justify-center w-12 h-12 rounded-full transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
             style={{
                 background: '#FFE500',
                 border: '3px solid #111',
@@ -51,7 +68,7 @@ export default function MusicBackground({ isMusicPlaying, toggleMusic, musicErro
             }}
         >
             <FaPlay className="text-[#111] text-sm pl-0.5" />
-        </Link>
+        </button>
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
             {/* Song selection popup */}
             <div className="relative w-full flex flex-col items-end">
