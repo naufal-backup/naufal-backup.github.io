@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>BRUTAL RUSH</title>
+<meta name="theme-color" content="#FFE500">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
 <style>
@@ -16,6 +17,7 @@ html, body {
   touch-action: none;
   -webkit-user-select: none;
   user-select: none;
+  -webkit-touch-callout: none;
 }
 #gameCanvas {
   display: block;
@@ -53,6 +55,14 @@ const COIN_INTERVAL_MAX = 120;
 const COIN_VALUE = 10;
 const COMBO_MULTIPLIER = 0.5;
 const ZONE_DISTANCE = 500; // meters per zone change
+const NEAR_MISS_BONUS = 5;
+const POWERUP_INTERVAL_MIN = 700;
+const POWERUP_INTERVAL_MAX = 1200;
+const POWERUP_TYPES = ['magnet', 'shield', 'multiplier'];
+const MAGNET_DURATION = 420;   // frames (~7s)
+const MULTIPLIER_DURATION = 480; // frames (~8s)
+const SHIELD_MAX_DURATION = 900; // frames before an unused shield expires
+const DEATH_FREEZE_FRAMES = 20; // hit-stop frames before game-over screen
 
 // --- NEOBRUTALISM PALETTE ---
 const ZONES = [
@@ -73,6 +83,7 @@ const SKINS = [
   { id: 'fire', name: 'FIRE', color: '#FF3B3B', cost: 200 },
   { id: 'ice', name: 'ICE', color: '#2B6EFF', cost: 400 },
   { id: 'toxic', name: 'TOXIC', color: '#00C853', cost: 800 },
+  { id: 'gold', name: 'GOLD', color: '#FFD700', unlockAt: 1500 },
 ];
 
 // --- CANVAS SETUP ---
@@ -105,9 +116,9 @@ window.addEventListener('resize', resizeCanvas);
 function loadData() {
   try {
     const d = JSON.parse(localStorage.getItem('brutalrush'));
-    return d || { highScore: 0, totalCoins: 0, unlockedSkins: ['default'], selectedSkin: 'default' };
+    return d || { highScore: 0, totalCoins: 0, unlockedSkins: ['default'], selectedSkin: 'default', gamesPlayed: 0, bestCombo: 0 };
   } catch(e) {
-    return { highScore: 0, totalCoins: 0, unlockedSkins: ['default'], selectedSkin: 'default' };
+    return { highScore: 0, totalCoins: 0, unlockedSkins: ['default'], selectedSkin: 'default', gamesPlayed: 0, bestCombo: 0 };
   }
 }
 function saveData() {
@@ -193,6 +204,31 @@ function playSound(type) {
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
       osc.start(now); osc.stop(now + 0.45);
       break;
+    case 'shieldbreak':
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.exponentialRampToValueAtTime(200, now + 0.2);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+      osc.start(now); osc.stop(now + 0.2);
+      break;
+    case 'powerup':
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(500, now);
+      osc.frequency.setValueAtTime(700, now + 0.08);
+      osc.frequency.setValueAtTime(900, now + 0.16);
+      gain.gain.setValueAtTime(0.14, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      osc.start(now); osc.stop(now + 0.3);
+      break;
+    case 'nearmiss':
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(900, now);
+      osc.frequency.exponentialRampToValueAtTime(1300, now + 0.08);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+      osc.start(now); osc.stop(now + 0.1);
+      break;
   }
 }
 
@@ -202,15 +238,17 @@ function vibrate(ms) {
 }
 
 // --- GAME STATE ---
-let gameState = 'menu'; // menu | playing | gameover | shop
-let player, obstacles, coins, particles;
-let score, distance, speed, coinCount, combo, comboTimer;
-let obstacleTimer, coinTimer;
+let gameState = 'menu'; // menu | playing | paused | gameover | shop
+let player, obstacles, coins, powerups, particles, floatingTexts;
+let score, distance, speed, coinCount, combo, comboTimer, maxCombo;
+let obstacleTimer, coinTimer, powerupTimer;
 let currentZone, zoneIndex;
 let screenShake, shakeIntensity;
 let frameCount;
 let zoneFlashTimer;
 let groundOffset;
+let effects; // { magnet, multiplier, shield, shieldTimer } — active power-up timers (frames)
+let dying, deathTimer; // hit-stop freeze before showing the game-over screen
 
 // Lane dash marks for ground
 let dashOffset = 0;
@@ -230,15 +268,19 @@ function resetGame() {
   };
   obstacles = [];
   coins = [];
+  powerups = [];
   particles = [];
+  floatingTexts = [];
   score = 0;
   distance = 0;
   speed = BASE_SPEED;
   coinCount = 0;
   combo = 0;
   comboTimer = 0;
+  maxCombo = 0;
   obstacleTimer = OBSTACLE_INTERVAL_MAX;
   coinTimer = COIN_INTERVAL_MIN;
+  powerupTimer = 500;
   zoneIndex = 0;
   currentZone = ZONES[0];
   screenShake = 0;
@@ -247,6 +289,9 @@ function resetGame() {
   zoneFlashTimer = 0;
   groundOffset = 0;
   dashOffset = 0;
+  effects = { magnet: 0, multiplier: 0, shield: 0, shieldTimer: 0 };
+  dying = false;
+  deathTimer = 0;
 }
 
 // --- DRAWING HELPERS (neobrutalism) ---
@@ -411,46 +456,69 @@ function drawParticles() {
   }
 }
 
+// --- FLOATING TEXT POPUPS ---
+function spawnFloatingText(x, y, text, color) {
+  floatingTexts.push({ x: x, y: y, text: text, color: color, life: 40, maxLife: 40 });
+}
+
+function updateFloatingTexts() {
+  for (let i = floatingTexts.length - 1; i >= 0; i--) {
+    const t = floatingTexts[i];
+    t.y -= 1.2;
+    t.life--;
+    if (t.life <= 0) floatingTexts.splice(i, 1);
+  }
+}
+
+function drawFloatingTexts() {
+  for (const t of floatingTexts) {
+    const alpha = Math.min(1, t.life / t.maxLife);
+    ctx.globalAlpha = alpha;
+    drawMonoText(t.text, t.x, t.y, 14, t.color, 'center');
+    ctx.globalAlpha = 1;
+  }
+}
+
 // --- OBSTACLES ---
 const OBSTACLE_TYPES = ['rect', 'triangle', 'tallRect', 'lowBar'];
 
-function spawnObstacle() {
-  const lane = Math.floor(Math.random() * LANE_COUNT);
-  const type = OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
-  let w, h, needSlide = false;
-  switch(type) {
-    case 'rect':
-      w = 50; h = 50; break;
-    case 'triangle':
-      w = 55; h = 55; break;
-    case 'tallRect':
-      w = 40; h = 80; break;
-    case 'lowBar':
-      w = LANE_WIDTH - 20; h = 30; needSlide = true; break;
+// Spawns a whole row of obstacles at once, always leaving at least one lane free.
+function spawnObstacleRow() {
+  const numBlocked = (speed > 9 && LANE_COUNT > 2 && Math.random() < 0.35) ? 2 : 1;
+  const laneOrder = [0, 1, 2].sort(() => Math.random() - 0.5);
+  const lanesToBlock = laneOrder.slice(0, Math.min(numBlocked, LANE_COUNT - 1));
+  const baseY = -100;
+
+  for (const lane of lanesToBlock) {
+    const type = OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
+    let w, h;
+    switch(type) {
+      case 'rect':
+        w = 50; h = 50; break;
+      case 'triangle':
+        w = 55; h = 55; break;
+      case 'tallRect':
+        w = 40; h = 80; break;
+      case 'lowBar':
+        w = LANE_WIDTH - 20; h = 30; break;
+    }
+    obstacles.push({
+      lane: lane,
+      x: LANE_CENTERS[lane],
+      y: baseY - Math.random() * 30,
+      w: w,
+      h: h,
+      type: type,
+      color: currentZone.accent1,
+      passed: false,
+    });
   }
-  obstacles.push({
-    lane: lane,
-    x: LANE_CENTERS[lane],
-    y: -h - 20,
-    w: w,
-    h: h,
-    type: type,
-    needSlide: needSlide,
-    color: currentZone.accent1,
-    passed: false,
-  });
 }
 
 function updateObstacles() {
   obstacleTimer--;
   if (obstacleTimer <= 0) {
-    spawnObstacle();
-    // Occasionally spawn double obstacle
-    if (Math.random() < 0.3 && speed > 7) {
-      setTimeout(() => {
-        if (gameState === 'playing') spawnObstacle();
-      }, 100);
-    }
+    spawnObstacleRow();
     obstacleTimer = OBSTACLE_INTERVAL_MIN + Math.random() * (OBSTACLE_INTERVAL_MAX - OBSTACLE_INTERVAL_MIN);
     obstacleTimer = Math.max(20, obstacleTimer - speed * 2);
   }
@@ -555,6 +623,54 @@ function drawCoin(c) {
   drawMonoText('$', c.x, c.y + bob, 12, BLACK, 'center');
 }
 
+// --- POWER-UPS ---
+const POWERUP_COLORS = { magnet: '#FF6D00', shield: '#2B6EFF', multiplier: '#00C853' };
+const POWERUP_LABELS = { magnet: 'M', shield: 'S', multiplier: 'x2' };
+const POWERUP_NAMES = { magnet: 'MAGNET', shield: 'SHIELD', multiplier: '2X SCORE' };
+
+function spawnPowerup() {
+  const lane = Math.floor(Math.random() * LANE_COUNT);
+  const type = POWERUP_TYPES[Math.floor(Math.random() * POWERUP_TYPES.length)];
+  powerups.push({
+    lane: lane,
+    x: LANE_CENTERS[lane],
+    y: -40,
+    size: 30,
+    type: type,
+    bobPhase: Math.random() * Math.PI * 2,
+  });
+}
+
+function updatePowerups() {
+  powerupTimer--;
+  if (powerupTimer <= 0) {
+    spawnPowerup();
+    powerupTimer = POWERUP_INTERVAL_MIN + Math.random() * (POWERUP_INTERVAL_MAX - POWERUP_INTERVAL_MIN);
+  }
+  for (let i = powerups.length - 1; i >= 0; i--) {
+    const pu = powerups[i];
+    pu.y += speed;
+    pu.bobPhase += 0.1;
+    if (pu.y > H + 40) powerups.splice(i, 1);
+  }
+}
+
+function drawPowerup(pu) {
+  const bob = Math.sin(pu.bobPhase) * 3;
+  drawBrutalCircle(pu.x, pu.y + bob, pu.size / 2, POWERUP_COLORS[pu.type], 3, 4);
+  drawMonoText(POWERUP_LABELS[pu.type], pu.x, pu.y + bob, 13, WHITE, 'center');
+}
+
+function activatePowerup(type) {
+  if (type === 'magnet') effects.magnet = MAGNET_DURATION;
+  if (type === 'multiplier') effects.multiplier = MULTIPLIER_DURATION;
+  if (type === 'shield') {
+    effects.shield = 1;
+    effects.shieldTimer = SHIELD_MAX_DURATION;
+  }
+  spawnFloatingText(player.x, player.y - 20, POWERUP_NAMES[type] + '!', POWERUP_COLORS[type]);
+}
+
 // --- PLAYER ---
 function getSkinColor() {
   const skin = SKINS.find(s => s.id === saveState.selectedSkin) || SKINS[0];
@@ -632,6 +748,7 @@ function drawPlayer() {
 
 function updatePlayer() {
   const p = player;
+  const wasJumping = p.isJumping;
 
   // Lane transition (smooth)
   const targetX = LANE_CENTERS[p.lane];
@@ -648,6 +765,11 @@ function updatePlayer() {
       p.vy = 0;
       p.isJumping = false;
     }
+  }
+
+  // Landing dust puff
+  if (wasJumping && !p.isJumping) {
+    spawnParticles(p.x, GROUND_Y, '#FFFFFF', 8, 4);
   }
 
   // Slide timer
@@ -667,17 +789,14 @@ function checkCollisions() {
   const py = p.isSliding ? GROUND_Y - ph : p.y;
   const px = p.x - pw / 2;
 
-  for (const o of obstacles) {
+  for (let i = obstacles.length - 1; i >= 0; i--) {
+    const o = obstacles[i];
     let ox, oy, ow, oh;
     if (o.type === 'lowBar') {
       ox = o.x - o.w / 2;
       oy = GROUND_Y - 65;
       ow = o.w;
       oh = o.h;
-      // Low bar — only hits if NOT sliding
-      if (p.isSliding) continue;
-      // Check y overlap
-      if (oy + oh < py || oy > py + ph) continue;
     } else {
       ox = o.x - o.w / 2;
       oy = o.y;
@@ -685,31 +804,68 @@ function checkCollisions() {
       oh = o.h;
     }
 
-    // AABB collision
-    if (px < ox + ow && px + pw > ox && py < oy + oh && py + ph > oy) {
-      // Same lane check (generous)
-      if (Math.abs(p.x - o.x) < LANE_WIDTH * 0.6) {
-        return true;
+    const sameLane = Math.abs(p.x - o.x) < LANE_WIDTH * 0.6;
+    const rowOverlap = py < oy + oh && py + ph > oy;
+    const aabbHit = px < ox + ow && px + pw > ox && rowOverlap;
+
+    if (sameLane && aabbHit) {
+      if (o.passed) continue;
+      o.passed = true;
+      if (effects.shield > 0) {
+        // Shield absorbs the hit — consume it and destroy the obstacle
+        effects.shield = 0;
+        effects.shieldTimer = 0;
+        playSound('shieldbreak');
+        vibrate(40);
+        spawnParticles(o.x, o.y, '#2B6EFF', 14, 8);
+        spawnFloatingText(o.x, o.y - 20, 'BLOCKED!', '#2B6EFF');
+        obstacles.splice(i, 1);
+        continue;
       }
+      return true;
+    } else if (sameLane && rowOverlap && !o.passed) {
+      // Successfully dodged (jumped/slid) an obstacle in our own lane — reward the skill
+      o.passed = true;
+      score += NEAR_MISS_BONUS;
+      spawnFloatingText(o.x, o.y - 10, '+' + NEAR_MISS_BONUS, '#00C853');
+      playSound('nearmiss');
     }
   }
 
-  // Coin collection
+  // Coin collection (magnet widens the pickup radius)
+  const collectRadius = effects.magnet > 0 ? 110 : 45;
   for (let i = coins.length - 1; i >= 0; i--) {
     const c = coins[i];
-    if (c.collected) continue;
-    const cdist = Math.abs(p.x - c.x) + Math.abs((p.y + ph/2) - c.y);
-    if (cdist < 45) {
-      c.collected = true;
+    const dx = p.x - c.x;
+    const dy = (p.y + ph / 2) - c.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < collectRadius) {
       combo++;
+      if (combo > maxCombo) maxCombo = combo;
       comboTimer = 60;
-      const bonus = Math.floor(COIN_VALUE * (1 + combo * COMBO_MULTIPLIER));
+      const multi = effects.multiplier > 0 ? 2 : 1;
+      const bonus = Math.floor(COIN_VALUE * (1 + combo * COMBO_MULTIPLIER) * multi);
       coinCount += bonus;
       score += bonus;
       spawnParticles(c.x, c.y, '#FFE500', 6, 5);
       playSound('coin');
       vibrate(15);
       coins.splice(i, 1);
+    }
+  }
+
+  // Power-up pickup
+  for (let i = powerups.length - 1; i >= 0; i--) {
+    const pu = powerups[i];
+    const dx = p.x - pu.x;
+    const dy = (p.y + ph / 2) - pu.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 45) {
+      activatePowerup(pu.type);
+      spawnParticles(pu.x, pu.y, POWERUP_COLORS[pu.type], 10, 6);
+      playSound('powerup');
+      vibrate(20);
+      powerups.splice(i, 1);
     }
   }
 
@@ -768,6 +924,15 @@ canvas.addEventListener('touchstart', function(e) {
     handleGameOverTap(touch.clientX, touch.clientY);
   } else if (gameState === 'shop') {
     handleShopTap(touch.clientX, touch.clientY);
+  } else if (gameState === 'paused') {
+    handlePauseTap(touch.clientX, touch.clientY);
+    isTouching = false;
+  } else if (gameState === 'playing') {
+    if (hitTest(touch.clientX, touch.clientY, pauseBtn)) {
+      gameState = 'paused';
+      playSound('select');
+      isTouching = false;
+    }
   }
 }, { passive: false });
 
@@ -811,6 +976,15 @@ document.addEventListener('keydown', function(e) {
         handleJump(); break;
       case 'ArrowDown': case 's': case 'S':
         handleSlide(); break;
+      case 'p': case 'P': case 'Escape':
+        gameState = 'paused';
+        playSound('select');
+        break;
+    }
+  } else if (gameState === 'paused') {
+    if (e.key === 'p' || e.key === 'P' || e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      gameState = 'playing';
     }
   } else if (gameState === 'menu') {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -841,11 +1015,19 @@ canvas.addEventListener('click', function(e) {
     handleGameOverTap(x, y);
   } else if (gameState === 'shop') {
     handleShopTap(x, y);
+  } else if (gameState === 'paused') {
+    handlePauseTap(x, y);
+  } else if (gameState === 'playing') {
+    if (hitTest(x, y, pauseBtn)) {
+      gameState = 'paused';
+      playSound('select');
+    }
   }
 });
 
 // --- MENU SCREEN ---
 let menuBtnPlay, menuBtnShop, menuBtnSound;
+let pauseBtn, pauseResumeBtn, pauseMenuBtn;
 
 function drawMenu() {
   // BG
@@ -905,6 +1087,10 @@ function drawMenu() {
   const coinY = titleY + 160;
   drawBrutalDiamond(W / 2 - 50, coinY, 18, '#FFE500', 3, 3);
   drawMonoText(saveState.totalCoins.toString(), W / 2 - 25, coinY, 16, BLACK, 'left');
+
+  if (saveState.gamesPlayed > 0) {
+    drawMonoText('RUNS: ' + saveState.gamesPlayed, W / 2, coinY + 24, 11, '#333', 'center');
+  }
 
   // Play button
   const btnW = 220;
@@ -979,63 +1165,66 @@ function drawShop() {
   ctx.restore();
 
   // Title
-  const titleY = 60;
-  drawBrutalRect(20, titleY - 25, W - 40, 50, '#FF3B3B', 4, 6);
-  drawBrutalText('SKINS', W / 2, titleY, 28, WHITE, 'center');
+  const titleY = 50;
+  drawBrutalRect(20, titleY - 22, W - 40, 44, '#FF3B3B', 4, 6);
+  drawBrutalText('SKINS', W / 2, titleY, 24, WHITE, 'center');
 
   // Coins
-  drawBrutalDiamond(W / 2 - 50, titleY + 50, 18, '#FFE500', 3, 3);
-  drawMonoText(saveState.totalCoins.toString(), W / 2 - 25, titleY + 50, 16, BLACK, 'left');
+  drawBrutalDiamond(W / 2 - 50, titleY + 42, 16, '#FFE500', 3, 3);
+  drawMonoText(saveState.totalCoins.toString(), W / 2 - 26, titleY + 42, 14, BLACK, 'left');
 
   shopBtns = [];
-  const startY = titleY + 90;
+  const startY = titleY + 72;
+  const cardH = 68;
+  const gap = 82;
 
   for (let i = 0; i < SKINS.length; i++) {
     const skin = SKINS[i];
-    const y = startY + i * 100;
+    const y = startY + i * gap;
     const isUnlocked = saveState.unlockedSkins.includes(skin.id);
     const isSelected = saveState.selectedSkin === skin.id;
     const cardW = W - 60;
-    const cardH = 80;
     const cardX = 30;
 
     const bgColor = isSelected ? '#FFE500' : WHITE;
     drawBrutalRect(cardX, y, cardW, cardH, bgColor, 4, 6);
 
     // Skin preview
-    drawBrutalRect(cardX + 15, y + 15, 40, 50, skin.color, 3, 4);
+    drawBrutalRect(cardX + 12, y + 12, 36, 44, skin.color, 3, 4);
     // Eyes on preview
     ctx.fillStyle = WHITE;
-    ctx.fillRect(cardX + 22, y + 27, 6, 6);
-    ctx.fillRect(cardX + 40, y + 27, 6, 6);
+    ctx.fillRect(cardX + 18, y + 22, 5, 5);
+    ctx.fillRect(cardX + 34, y + 22, 5, 5);
     ctx.fillStyle = BLACK;
-    ctx.fillRect(cardX + 24, y + 29, 3, 3);
-    ctx.fillRect(cardX + 42, y + 29, 3, 3);
+    ctx.fillRect(cardX + 19, y + 23, 3, 3);
+    ctx.fillRect(cardX + 35, y + 23, 3, 3);
 
     // Name
-    drawBrutalText(skin.name, cardX + 100, y + 28, 22, BLACK, 'left');
+    drawBrutalText(skin.name, cardX + 90, y + 24, 19, BLACK, 'left');
 
     if (isUnlocked) {
       if (isSelected) {
-        drawMonoText('EQUIPPED', cardX + 102, y + 52, 12, '#111', 'left');
+        drawMonoText('EQUIPPED', cardX + 92, y + 46, 11, '#111', 'left');
       } else {
-        drawMonoText('TAP TO EQUIP', cardX + 102, y + 52, 11, '#555', 'left');
+        drawMonoText('TAP TO EQUIP', cardX + 92, y + 46, 10, '#555', 'left');
       }
+    } else if (skin.unlockAt) {
+      drawMonoText('REACH ' + skin.unlockAt + 'm', cardX + 92, y + 46, 10, '#555', 'left');
     } else {
       // Cost
-      drawBrutalDiamond(cardX + 102, y + 52, 14, '#FFE500', 2, 3);
-      drawMonoText(skin.cost.toString(), cardX + 118, y + 52, 12, BLACK, 'left');
+      drawBrutalDiamond(cardX + 92, y + 46, 12, '#FFE500', 2, 3);
+      drawMonoText(skin.cost.toString(), cardX + 106, y + 46, 11, BLACK, 'left');
     }
 
     shopBtns.push({ x: cardX, y: y, w: cardW, h: cardH, skinId: skin.id });
   }
 
-  // Back button
-  const backY = H - 80;
-  const backBtn = { x: 30, y: backY, w: W - 60, h: 50 };
+  // Back button (positioned right after the skin list, so it scales with skin count)
+  const backY = startY + SKINS.length * gap + 10;
+  const backBtn = { x: 30, y: backY, w: W - 60, h: 46 };
   shopBtns.push({ ...backBtn, skinId: '__back' });
   drawBrutalRect(backBtn.x, backBtn.y, backBtn.w, backBtn.h, BLACK, 4, 6);
-  drawBrutalText('BACK', W / 2, backY + 25, 22, WHITE, 'center', false);
+  drawBrutalText('BACK', W / 2, backY + 23, 20, WHITE, 'center', false);
 }
 
 function handleShopTap(x, y) {
@@ -1053,6 +1242,9 @@ function handleShopTap(x, y) {
         saveState.selectedSkin = skin.id;
         playSound('select');
         saveData();
+      } else if (skin.unlockAt) {
+        // Distance-locked — can't be bought with coins
+        playSound('hit');
       } else if (saveState.totalCoins >= skin.cost) {
         // Buy
         saveState.totalCoins -= skin.cost;
@@ -1066,6 +1258,38 @@ function handleShopTap(x, y) {
       }
       return;
     }
+  }
+}
+
+// --- PAUSE OVERLAY ---
+function drawPauseOverlay() {
+  ctx.fillStyle = BLACK;
+  ctx.globalAlpha = 0.75;
+  ctx.fillRect(0, 0, W, H);
+  ctx.globalAlpha = 1;
+
+  drawBrutalText('PAUSED', W / 2, H * 0.32, 36, WHITE, 'center');
+
+  const btnW = 200;
+  const resumeY = H * 0.48;
+  pauseResumeBtn = { x: W / 2 - btnW / 2, y: resumeY, w: btnW, h: 60 };
+  drawBrutalRect(pauseResumeBtn.x, resumeY, btnW, 60, '#00C853', 5, 8);
+  drawBrutalText('RESUME', W / 2, resumeY + 30, 24, WHITE, 'center');
+
+  const menuY = resumeY + 80;
+  pauseMenuBtn = { x: W / 2 - btnW / 2, y: menuY, w: btnW, h: 50 };
+  drawBrutalRect(pauseMenuBtn.x, menuY, btnW, 50, '#FF3B3B', 4, 6);
+  drawBrutalText('QUIT', W / 2, menuY + 25, 22, WHITE, 'center');
+}
+
+function handlePauseTap(x, y) {
+  if (hitTest(x, y, pauseResumeBtn)) {
+    playSound('select');
+    gameState = 'playing';
+  } else if (hitTest(x, y, pauseMenuBtn)) {
+    playSound('select');
+    finalizeRun();
+    gameState = 'menu';
   }
 }
 
@@ -1103,20 +1327,25 @@ function drawGameOver() {
   // Score card
   const cardY = H * 0.34;
   const cardW = W - 50;
-  const cardH = 180;
+  const cardH = 205;
   drawBrutalRect(25, cardY, cardW, cardH, WHITE, 5, 8);
 
   // Distance
-  drawMonoText('DISTANCE', W / 2, cardY + 30, 12, '#555', 'center');
-  drawBrutalText(Math.floor(distance) + 'm', W / 2, cardY + 62, 38, BLACK, 'center', false);
+  drawMonoText('DISTANCE', W / 2, cardY + 28, 12, '#555', 'center');
+  drawBrutalText(Math.floor(distance) + 'm', W / 2, cardY + 58, 34, BLACK, 'center', false);
 
   // Score
-  drawMonoText('SCORE', W / 2, cardY + 95, 12, '#555', 'center');
-  drawBrutalText(score.toString(), W / 2, cardY + 122, 30, '#FF3B3B', 'center');
+  drawMonoText('SCORE', W / 2, cardY + 90, 12, '#555', 'center');
+  drawBrutalText(score.toString(), W / 2, cardY + 116, 28, '#FF3B3B', 'center');
 
   // Coins earned
-  drawBrutalDiamond(W / 2 - 40, cardY + 155, 16, '#FFE500', 3, 3);
-  drawMonoText('+' + coinCount, W / 2 - 17, cardY + 155, 14, BLACK, 'left');
+  drawBrutalDiamond(W / 2 - 55, cardY + 148, 15, '#FFE500', 3, 3);
+  drawMonoText('+' + coinCount, W / 2 - 32, cardY + 148, 13, BLACK, 'left');
+
+  // Best combo this run
+  if (maxCombo > 1) {
+    drawMonoText('BEST COMBO x' + maxCombo, W / 2 + 22, cardY + 148, 11, '#555', 'left');
+  }
 
   // New high score badge
   if (Math.floor(distance) >= saveState.highScore && saveState.highScore > 0) {
@@ -1152,6 +1381,25 @@ function handleGameOverTap(x, y) {
   }
 }
 
+// --- RUN LIFECYCLE ---
+function checkSkinUnlocks() {
+  for (const skin of SKINS) {
+    if (skin.unlockAt && !saveState.unlockedSkins.includes(skin.id) && saveState.highScore >= skin.unlockAt) {
+      saveState.unlockedSkins.push(skin.id);
+    }
+  }
+}
+
+function finalizeRun() {
+  const dist = Math.floor(distance);
+  if (dist > saveState.highScore) saveState.highScore = dist;
+  saveState.totalCoins += coinCount;
+  saveState.gamesPlayed = (saveState.gamesPlayed || 0) + 1;
+  if (maxCombo > (saveState.bestCombo || 0)) saveState.bestCombo = maxCombo;
+  checkSkinUnlocks();
+  saveData();
+}
+
 // --- HUD ---
 function drawHUD() {
   // Top bar
@@ -1167,8 +1415,15 @@ function drawHUD() {
   drawMonoText(score.toString(), W / 2, 26, 16, '#FFE500', 'center');
 
   // Coins
-  drawBrutalDiamond(W - 80, 26, 14, '#FFE500', 2, 2);
-  drawMonoText(coinCount.toString(), W - 60, 26, 14, WHITE, 'left');
+  drawBrutalDiamond(W - 110, 26, 14, '#FFE500', 2, 2);
+  drawMonoText(coinCount.toString(), W - 90, 26, 14, WHITE, 'left');
+
+  // Pause button
+  pauseBtn = { x: W - 42, y: 8, w: 34, h: 34 };
+  drawBrutalRect(pauseBtn.x, pauseBtn.y, pauseBtn.w, pauseBtn.h, WHITE, 3, 3);
+  ctx.fillStyle = BLACK;
+  ctx.fillRect(pauseBtn.x + 10, pauseBtn.y + 8, 5, 18);
+  ctx.fillRect(pauseBtn.x + 19, pauseBtn.y + 8, 5, 18);
 
   // Combo
   if (combo > 1 && comboTimer > 0) {
@@ -1177,6 +1432,25 @@ function drawHUD() {
     drawBrutalRect(W / 2 - 50, 55, 100, 30, '#FF3B3B', 3, 4);
     drawMonoText('x' + combo + ' COMBO', W / 2, 70, 12, WHITE, 'center');
     ctx.globalAlpha = 1;
+  }
+
+  // Active power-up effects row
+  let effX = 10;
+  const effY = (combo > 1 && comboTimer > 0) ? 96 : 62;
+  if (effects.magnet > 0) {
+    drawBrutalRect(effX, effY, 70, 26, POWERUP_COLORS.magnet, 2, 3);
+    drawMonoText('M ' + Math.ceil(effects.magnet / 60) + 's', effX + 35, effY + 13, 11, WHITE, 'center');
+    effX += 78;
+  }
+  if (effects.multiplier > 0) {
+    drawBrutalRect(effX, effY, 70, 26, POWERUP_COLORS.multiplier, 2, 3);
+    drawMonoText('x2 ' + Math.ceil(effects.multiplier / 60) + 's', effX + 35, effY + 13, 11, WHITE, 'center');
+    effX += 78;
+  }
+  if (effects.shield > 0) {
+    drawBrutalRect(effX, effY, 70, 26, POWERUP_COLORS.shield, 2, 3);
+    drawMonoText('SHIELD', effX + 35, effY + 13, 10, WHITE, 'center');
+    effX += 78;
   }
 
   // Zone notification
@@ -1261,6 +1535,19 @@ function drawEnvironment() {
 function updateGame() {
   frameCount++;
 
+  // Hit-stop: freeze the world briefly for impact before showing game-over
+  if (dying) {
+    updateParticles();
+    updateFloatingTexts();
+    if (screenShake > 0) screenShake--;
+    deathTimer--;
+    if (deathTimer <= 0) {
+      finalizeRun();
+      gameState = 'gameover';
+    }
+    return;
+  }
+
   // Speed progression
   speed = Math.min(MAX_SPEED, BASE_SPEED + distance * SPEED_INCREMENT);
   distance += speed * 0.05;
@@ -1269,6 +1556,14 @@ function updateGame() {
   if (comboTimer > 0) {
     comboTimer--;
     if (comboTimer <= 0) combo = 0;
+  }
+
+  // Power-up timers
+  if (effects.magnet > 0) effects.magnet--;
+  if (effects.multiplier > 0) effects.multiplier--;
+  if (effects.shield > 0) {
+    effects.shieldTimer--;
+    if (effects.shieldTimer <= 0) effects.shield = 0;
   }
 
   // Zone transitions
@@ -1288,25 +1583,22 @@ function updateGame() {
   updatePlayer();
   updateObstacles();
   updateCoins();
+  updatePowerups();
   updateParticles();
+  updateFloatingTexts();
 
   // Screen shake decay
   if (screenShake > 0) screenShake--;
 
   // Collision check
   if (checkCollisions()) {
-    // GAME OVER
-    gameState = 'gameover';
+    // Fatal hit — start hit-stop, then transition to game-over
+    dying = true;
+    deathTimer = DEATH_FREEZE_FRAMES;
+    screenShake = 25;
+    shakeIntensity = 14;
     playSound('hit');
     vibrate(100);
-    screenShake = 20;
-    shakeIntensity = 10;
-
-    // Save data
-    const dist = Math.floor(distance);
-    if (dist > saveState.highScore) saveState.highScore = dist;
-    saveState.totalCoins += coinCount;
-    saveData();
 
     // Explosion particles
     spawnParticles(player.x, player.y, getSkinColor(), 20, 12);
@@ -1329,7 +1621,12 @@ function drawGame() {
 
   // Draw coins
   for (const c of coins) {
-    if (!c.collected) drawCoin(c);
+    drawCoin(c);
+  }
+
+  // Draw power-ups
+  for (const pu of powerups) {
+    drawPowerup(pu);
   }
 
   // Draw obstacles
@@ -1343,10 +1640,22 @@ function drawGame() {
   // Draw particles
   drawParticles();
 
+  // Draw floating bonus/notification texts
+  drawFloatingTexts();
+
   // HUD
   drawHUD();
 
   ctx.restore();
+
+  // Impact flash on death
+  if (dying && deathTimer > DEATH_FREEZE_FRAMES - 6) {
+    const flashAlpha = (deathTimer - (DEATH_FREEZE_FRAMES - 6)) / 6;
+    ctx.globalAlpha = flashAlpha * 0.6;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = 1;
+  }
 }
 
 // --- GAME LOOP ---
@@ -1360,6 +1669,10 @@ function gameLoop() {
     case 'playing':
       updateGame();
       drawGame();
+      break;
+    case 'paused':
+      drawGame();
+      drawPauseOverlay();
       break;
     case 'gameover':
       drawGame(); // Draw last frame
