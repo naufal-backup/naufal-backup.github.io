@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMousePointer, FaPlay } from "react-icons/fa";
@@ -10,19 +10,29 @@ export default function GameClient({ slug }) {
     const [isMobile, setIsMobile] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const [isActionActive, setIsActionActive] = useState(false);
-    const [showEntryOverlay, setShowEntryOverlay] = useState(true);
+    const [showEntryOverlay, setShowEntryOverlay] = useState(false);
     const [isExiting, setIsExiting] = useState(false);
     const router = useRouter();
+    const isBackNav = useRef(false);
 
-    // Skip entry overlay when coming back from homepage
-    useEffect(() => {
-        if (sessionStorage.getItem('fromGame')) {
+    // useLayoutEffect runs BEFORE browser paint — no flicker
+    useLayoutEffect(() => {
+        isBackNav.current = !!sessionStorage.getItem('fromGame');
+        if (isBackNav.current) {
+            sessionStorage.removeItem('fromGame');
             setShowEntryOverlay(false);
         } else {
-            const timer = setTimeout(() => setShowEntryOverlay(false), 100);
-            return () => clearTimeout(timer);
+            setShowEntryOverlay(true);
         }
     }, []);
+
+    // Hide entry overlay after delay (forward nav only)
+    useEffect(() => {
+        if (showEntryOverlay) {
+            const timer = setTimeout(() => setShowEntryOverlay(false), 500);
+            return () => clearTimeout(timer);
+        }
+    }, [showEntryOverlay]);
 
     useEffect(() => {
         const checkMobile = () => {
@@ -98,10 +108,10 @@ export default function GameClient({ slug }) {
 
     return (
         <div className="w-full h-screen bg-black flex items-center justify-center relative">
-            {/* Entry transition overlay - slide out to left */}
+            {/* Entry transition overlay */}
             <div
                 className={`fixed inset-0 z-[9999] flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    showEntryOverlay ? 'translate-x-0' : '-translate-x-full'
+                    isExiting ? 'translate-x-0' : showEntryOverlay ? 'translate-x-0' : '-translate-x-full'
                 }`}
                 style={{ background: '#FFE500' }}
             >
