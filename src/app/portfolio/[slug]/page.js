@@ -3,6 +3,7 @@ import GameClient from './GameClient';
 export function generateStaticParams() {
     return [
         { slug: 'project-a' },
+        { slug: 'brutal-rush' },
     ];
 }
 
