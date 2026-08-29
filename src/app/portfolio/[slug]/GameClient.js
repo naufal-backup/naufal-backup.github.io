@@ -9,6 +9,13 @@ export default function GameClient({ slug }) {
     const [isMobile, setIsMobile] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false); // New state to track if iframe loaded
     const [isActionActive, setIsActionActive] = useState(false); // Track action button press state
+    const [showEntryOverlay, setShowEntryOverlay] = useState(true); // Entry transition overlay
+
+    // Slide out entry overlay after mount
+    useEffect(() => {
+        const timer = setTimeout(() => setShowEntryOverlay(false), 100);
+        return () => clearTimeout(timer);
+    }, []);
 
     useEffect(() => {
         const checkMobile = () => {
@@ -84,6 +91,15 @@ export default function GameClient({ slug }) {
 
     return (
         <div className="w-full h-screen bg-black flex items-center justify-center relative">
+            {/* Entry transition overlay - slide out to left */}
+            <div
+                className={`fixed inset-0 z-[9999] flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    showEntryOverlay ? 'translate-x-0' : '-translate-x-full'
+                }`}
+                style={{ background: '#FFE500' }}
+            >
+                <FaPlay className="text-[#111] text-5xl animate-pulse" />
+            </div>
             {/* Back Button */}
             <Link 
                 href="/" 
