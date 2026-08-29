@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMousePointer, FaPlay } from "react-icons/fa";
 
 export default function GameClient({ slug }) {
@@ -10,6 +11,8 @@ export default function GameClient({ slug }) {
     const [isLoaded, setIsLoaded] = useState(false); // New state to track if iframe loaded
     const [isActionActive, setIsActionActive] = useState(false); // Track action button press state
     const [showEntryOverlay, setShowEntryOverlay] = useState(true); // Entry transition overlay
+    const [isExiting, setIsExiting] = useState(false); // Back transition overlay
+    const router = useRouter();
 
     // Slide out entry overlay after mount
     useEffect(() => {
@@ -100,14 +103,26 @@ export default function GameClient({ slug }) {
             >
                 <FaPlay className="text-[#111] text-5xl animate-pulse" />
             </div>
+            {/* Back transition overlay - slide in from left */}
+            <div
+                className={`fixed inset-0 z-[9998] flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isExiting ? 'translate-x-0' : '-translate-x-full'
+                }`}
+                style={{ background: '#FFE500' }}
+            >
+                <FaArrowLeft className="text-[#111] text-5xl animate-pulse" />
+            </div>
             {/* Back Button */}
-            <Link 
-                href="/" 
-                className="absolute top-4 left-4 z-50 w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-all"
+            <button
+                onClick={() => {
+                    setIsExiting(true);
+                    setTimeout(() => router.push('/'), 500);
+                }}
+                className="absolute top-4 left-4 z-50 w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-all cursor-pointer"
                 title="Back to Home"
             >
                 <FaArrowLeft size={18} />
-            </Link>
+            </button>
             {/* Loading indicator - Show until loaded */}
             {!isLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black z-10 pointer-events-none">

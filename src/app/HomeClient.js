@@ -1,5 +1,6 @@
 "use client";
 import{useState,useEffect,useRef}from'react';
+import { FaPlay } from 'react-icons/fa';
 import { ScrollProvider } from'./components/ScrollReveal';
 import FirstSection from'./sections/FirstSection';
 import SecondSection from'./sections/SecondSection';
@@ -14,9 +15,13 @@ const[isMusicPlaying,setIsMusicPlaying]=useState(false);
 const[isMusicOnClick,setIsMusicOnClick]=useState(false);
 const[musicError,setMusicError]=useState(null);
 const[currentSong,setCurrentSong]=useState(SONGS[0]);
+const[showHomeOverlay,setShowHomeOverlay]=useState(true);
 const audioRef=useRef(null);
+useEffect(()=>{const t=setTimeout(()=>setShowHomeOverlay(false),100);return()=>clearTimeout(t);},[]);
 useEffect(()=>{fetch('/portfolio/PortfolioList.json').then(r=>r.json()).then(d=>setPortfolioItems(d)).catch(e=>console.error(e));},[]);
 useEffect(()=>{const a=new Audio(SONGS[0].src);a.volume=0.4;a.loop=true;a.onerror=()=>setMusicError('Gagal memuat musik.');audioRef.current=a;return()=>{a.pause();a.src='';};},[]);
 const toggleMusic=()=>{const a=audioRef.current;if(!a)return;setIsMusicOnClick(true);setMusicError(null);if(isMusicPlaying){a.pause();setIsMusicPlaying(false);}else{a.play().catch(e=>setMusicError('Error: '+e.message));setIsMusicPlaying(true);}};
 const handleSongChange=(song)=>{const a=audioRef.current;if(!a)return;a.pause();a.src=song.src;a.load();setCurrentSong(song);setMusicError(null);a.play().catch(e=>setMusicError('Error: '+e.message));setIsMusicPlaying(true);};
-return(<ScrollProvider><div className="bg-[#0a0a0a] text-[#f5f5f5]"><FirstSection/><SecondSection/><AchievementSection/><ThirdSection portfolioItems={portfolioItems}/><FourthSection/><MusicBackground isMusicOnClick={isMusicOnClick} isMusicPlaying={isMusicPlaying} toggleMusic={toggleMusic} musicError={musicError} songs={SONGS} currentSong={currentSong} onSongChange={handleSongChange}/></div></ScrollProvider>);}
+return(<ScrollProvider><div className="bg-[#0a0a0a] text-[#f5f5f5] relative">
+<div className={`fixed inset-0 z-[9999] flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${showHomeOverlay?'translate-x-0':'translate-x-full'}`} style={{background:'#FFE500'}}><FaPlay className="text-[#111] text-5xl animate-pulse"/></div>
+<FirstSection/><SecondSection/><AchievementSection/><ThirdSection portfolioItems={portfolioItems}/><FourthSection/><MusicBackground isMusicOnClick={isMusicOnClick} isMusicPlaying={isMusicPlaying} toggleMusic={toggleMusic} musicError={musicError} songs={SONGS} currentSong={currentSong} onSongChange={handleSongChange}/></div></ScrollProvider>);}
