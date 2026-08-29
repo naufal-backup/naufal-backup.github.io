@@ -86,13 +86,5 @@
         "stack": "Next.js, Tailwind CSS",
         "url": "https://hamemayu.ac.id",
         "image": "/images/hamemayu.webp"
-    },
-    {
-        "id": 12,
-        "title": "Brutal Rush",
-        "description": "Neobrutalism Endless Runner Game",
-        "stack": "Javascript",
-        "url": "/portfolio/brutal-rush",
-        "image": ""
     }
 ]
