@@ -101,7 +101,7 @@ export default function GameClient({ slug }) {
                 }`}
                 style={{ background: '#FFE500' }}
             >
-                <FaPlay className="text-[#111] text-5xl animate-pulse" />
+                <FaArrowLeft className="text-[#111] text-5xl animate-pulse" />
             </div>
             {/* Back transition overlay - slide in from left */}
             <div
