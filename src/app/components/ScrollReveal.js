@@ -99,7 +99,7 @@ function useScrollRegistry() {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
 
-    checkAll();
+    // Don't checkAll() on mount — wait for first scroll so animations are visible
 
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -114,14 +114,7 @@ function useScrollRegistry() {
       threshold,
       wasInView: false,
     });
-    const rect = el.getBoundingClientRect();
-    const vh = window.innerHeight;
-    const thresholdPx = threshold * vh;
-    const initiallyInView = rect.bottom > thresholdPx && rect.top < vh - thresholdPx;
-    if (initiallyInView) {
-      registry.current.get(id).wasInView = true;
-      setState("visible");
-    }
+    // Don't check initial visibility — let scroll trigger the animation
   }, []);
 
   const unregister = useCallback((id) => {
