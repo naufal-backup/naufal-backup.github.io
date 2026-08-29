@@ -1,6 +1,27 @@
 "use client";
-import { useRef, useState, useEffect, useContext, createContext, useCallback } from 'react';
+import { useRef, useState, useEffect, useContext, createContext, useCallback, Children } from 'react';
 import { motion } from 'framer-motion';
+
+// --- Scroll direction tracker (module-level, single listener) ---
+let scrollDir = 'down';
+let lastScrollY = 0;
+let scrollListenerAttached = false;
+
+function ensureScrollDirListener() {
+  if (scrollListenerAttached || typeof window === 'undefined') return;
+  scrollListenerAttached = true;
+  lastScrollY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > lastScrollY + 1) scrollDir = 'down';
+    else if (y < lastScrollY - 1) scrollDir = 'up';
+    lastScrollY = y;
+  }, { passive: true });
+}
+
+// Context for StaggerContainer → StaggerItem communication
+const StaggerDelayContext = createContext(null);
+const StaggerItemIndexContext = createContext(0);
 
 const animations = {
   fadeUp: {
@@ -241,49 +262,117 @@ export function ScrollProvider({ children }) {
 
 export function StaggerContainer({ children, className = "", staggerDelay = 0.08 }) {
   const [state, setState] = useState("hidden");
+  const [delayMap, setDelayMap] = useState(new Map());
   const elRef = useRef(null);
   const idRef = useRef(nextId++);
   const ctx = useContext(ScrollContext);
+  const dirAtReveal = useRef('down');
+
+  // Ensure scroll direction listener is active
+  useEffect(() => { ensureScrollDirListener(); }, []);
 
   useEffect(() => {
     if (!ctx || !elRef.current) return;
-    ctx.register(idRef.current, elRef.current, setState, 0.1);
+    ctx.register(idRef.current, elRef.current, (newState) => {
+      if (newState === "visible") {
+        // Capture scroll direction at moment of reveal
+        dirAtReveal.current = scrollDir;
+        // Compute row-based delays from actual DOM layout
+        const el = elRef.current;
+        if (el) {
+          const directChildren = Array.from(el.children);
+          const childCount = directChildren.length;
+          if (childCount > 0) {
+            // Detect columns from grid layout or fall back to position-based detection
+            const style = getComputedStyle(el);
+            let cols = 1;
+            if (style.display === 'grid' || style.display === 'inline-grid') {
+              cols = style.gridTemplateColumns.split(' ').filter(s => s.trim()).length;
+            } else {
+              // For flex: detect columns by checking how many items share same top offset
+              const firstTop = directChildren[0].getBoundingClientRect().top;
+              cols = directChildren.filter(c => Math.abs(c.getBoundingClientRect().top - firstTop) < 2).length;
+              if (cols < 1) cols = 1;
+            }
+
+            const maxRow = Math.floor((childCount - 1) / cols);
+            const newDelayMap = new Map();
+            const dir = dirAtReveal.current;
+
+            directChildren.forEach((child, i) => {
+              const row = Math.floor(i / cols);
+              // Down → top rows first (row 0 = delay 0)
+              // Up → bottom rows first (maxRow = delay 0)
+              const order = dir === 'down' ? row : (maxRow - row);
+              // Within same row, add small offset per column position
+              const colIdx = i % cols;
+              const delay = (order * staggerDelay) + (colIdx * staggerDelay * 0.3);
+              newDelayMap.set(i, delay);
+            });
+            setDelayMap(newDelayMap);
+          }
+        }
+      }
+      setState(newState);
+    }, 0.1);
     return () => ctx.unregister(idRef.current);
-  }, [ctx]);
+  }, [ctx, staggerDelay]);
+
+  const contextValue = { state, delayMap };
 
   return (
-    <motion.div
-      ref={elRef}
-      initial="hidden"
-      animate={state}
-      variants={{
-        hidden: {},
-        visible: {
-          transition: {
-            staggerChildren: staggerDelay,
-          },
-        },
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
+    <StaggerDelayContext.Provider value={contextValue}>
+      <motion.div
+        ref={elRef}
+        initial="hidden"
+        animate={state}
+        variants={{
+          hidden: {},
+          visible: {},
+        }}
+        className={className}
+      >
+        {Children.map(children, (child, index) => {
+          if (!child) return null;
+          // Inject index prop into StaggerItem children
+          return (
+            <StaggerItemIndexContext.Provider value={index} key={child.key || index}>
+              {child}
+            </StaggerItemIndexContext.Provider>
+          );
+        })}
+      </motion.div>
+    </StaggerDelayContext.Provider>
   );
 }
 
 export function StaggerItem({ children, animation = "fadeUp", className = "" }) {
   const variant = animations[animation] || animations.fadeUp;
   const isSpring = ["bounceIn", "popIn", "flipX", "slideRotate"].includes(animation);
+  const staggerCtx = useContext(StaggerDelayContext);
+  const itemIndex = useContext(StaggerItemIndexContext);
+
+  const itemDelay = staggerCtx?.delayMap?.get(itemIndex) ?? 0;
+  const parentState = staggerCtx?.state ?? "hidden";
 
   return (
     <motion.div
+      initial="hidden"
+      animate={parentState}
       variants={{
         hidden: variant.hidden,
         visible: {
           ...variant.visible,
-          transition: isSpring ? variant.visible.transition : { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+          transition: isSpring
+            ? { ...variant.visible.transition, delay: itemDelay }
+            : { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: itemDelay },
         },
       }}
+      transition={
+        parentState === "hidden"
+          ? { duration: 0.3, ease: [0.4, 0, 1, 1] }
+          : undefined
+      }
       className={className}
     >
       {children}
