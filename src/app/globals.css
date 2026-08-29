@@ -32,12 +32,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
-* {
+html, body, * {
   scroll-behavior: smooth;
   scrollbar-width: none;
 }
 
-*::-webkit-scrollbar {
+html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar {
   display: none;
 }
 
