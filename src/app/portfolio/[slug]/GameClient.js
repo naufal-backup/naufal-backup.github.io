@@ -8,16 +8,20 @@ import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMousePointer, FaPl
 export default function GameClient({ slug }) {
     const iframeRef = useRef(null);
     const [isMobile, setIsMobile] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false); // New state to track if iframe loaded
-    const [isActionActive, setIsActionActive] = useState(false); // Track action button press state
-    const [showEntryOverlay, setShowEntryOverlay] = useState(true); // Entry transition overlay
-    const [isExiting, setIsExiting] = useState(false); // Back transition overlay
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [isActionActive, setIsActionActive] = useState(false);
+    const [showEntryOverlay, setShowEntryOverlay] = useState(true);
+    const [isExiting, setIsExiting] = useState(false);
     const router = useRouter();
 
-    // Slide out entry overlay after mount
+    // Skip entry overlay when coming back from homepage
     useEffect(() => {
-        const timer = setTimeout(() => setShowEntryOverlay(false), 100);
-        return () => clearTimeout(timer);
+        if (sessionStorage.getItem('fromGame')) {
+            setShowEntryOverlay(false);
+        } else {
+            const timer = setTimeout(() => setShowEntryOverlay(false), 100);
+            return () => clearTimeout(timer);
+        }
     }, []);
 
     useEffect(() => {
@@ -113,6 +117,7 @@ export default function GameClient({ slug }) {
                 <FaArrowLeft className="text-[#111] text-5xl animate-pulse" />
             </div>
             {/* Back Button */}
+            {!isExiting && (
             <button
                 onClick={() => {
                     sessionStorage.setItem('fromGame', 'true');
@@ -124,6 +129,7 @@ export default function GameClient({ slug }) {
             >
                 <FaArrowLeft size={18} />
             </button>
+            )}
             {/* Loading indicator - Show until loaded */}
             {!isLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black z-10 pointer-events-none">
