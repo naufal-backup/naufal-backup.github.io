@@ -44,7 +44,7 @@ export default function MusicBackground({ isMusicPlaying, toggleMusic, musicErro
         <button
             onClick={() => router.push('/portfolio/brutal-rush')}
             title="Play Brutal Rush"
-            className="fixed top-1/2 right-4 -translate-y-1/2 z-50 flex items-center justify-center w-12 h-12 rounded-full transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+            className="fixed top-1/2 right-2 sm:right-4 -translate-y-1/2 z-50 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
             style={{
                 background: '#FFE500',
                 border: '3px solid #111',
