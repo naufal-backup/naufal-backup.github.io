@@ -10,7 +10,7 @@ import { useState } from 'react';
 export default function PDFViewer({ file }) {
   const [numPages, setNumPages] = useState(null);
   useEffect(() => {
-    pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
+    pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
   }, []);
 
   function onDocumentLoadSuccess({ numPages }) {
