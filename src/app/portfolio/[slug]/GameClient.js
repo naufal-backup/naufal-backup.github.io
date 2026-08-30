@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMousePointer } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMousePointer, FaPlay } from "react-icons/fa";
 
 export default function GameClient({ slug }) {
     const iframeRef = useRef(null);
