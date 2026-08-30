@@ -15,7 +15,7 @@ export const metadata = {
   title: "Naufal - Portfolio",
   description: "Personal portfolio website",
   icons: {
-    icon: "/favicon.jpg",
+    icon: "/favicon.svg",
   },
 };
 
