@@ -17,11 +17,11 @@
     },
     {
         "id": 3,
-        "title": "Project-A",
-        "description": "Action Top-Down Web Game",
-        "stack": "Godot Engine",
-        "url": "/portfolio/project-a",
-        "image": "/images/project-a.webp"
+        "title": "DokuLens",
+        "description": "Studio Olah Dokumen & Gambar (100% Client-Side)",
+        "stack": "Javascript, HTML, CSS",
+        "url": "https://dokulens.github.io/",
+        "image": "/images/dokulens.png"
     },
     {
         "id": 4,
