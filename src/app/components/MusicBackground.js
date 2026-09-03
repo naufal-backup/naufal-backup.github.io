@@ -2,7 +2,7 @@
 
 
 import React, { useState, useRef, useEffect } from 'react';
-import { FaVolumeUp, FaVolumeMute, FaMusic, FaPlay } from 'react-icons/fa';
+import { FaVolumeUp, FaVolumeMute, FaMusic, FaPlay, FaFileAlt } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
 export default function MusicBackground({ isMusicPlaying, toggleMusic, musicError, songs = [], currentSong, onSongChange }) {
@@ -40,19 +40,33 @@ export default function MusicBackground({ isMusicPlaying, toggleMusic, musicErro
 
     return (
         <>
-        {/* Play Game button - fixed tengah vertikal kanan, neobrutalism kuning */}
-        <button
-            onClick={() => router.push('/portfolio/brutal-rush')}
-            title="Play Brutal Rush"
-            className="fixed top-1/2 right-2 sm:right-4 -translate-y-1/2 z-50 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
-            style={{
-                background: '#FFE500',
-                border: '3px solid #111',
-                boxShadow: '4px 4px 0px #111',
-            }}
-        >
-            <FaPlay className="text-[#111] text-sm pl-0.5" />
-        </button>
+        {/* Floating buttons - fixed tengah vertikal kanan, neobrutalism */}
+        <div className="fixed top-1/2 right-2 sm:right-4 -translate-y-1/2 z-50 flex flex-col items-center gap-4">
+            <button
+                onClick={() => router.push('/portfolio/brutal-rush')}
+                title="Play Brutal Rush"
+                className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+                style={{
+                    background: '#FFE500',
+                    border: '3px solid #111',
+                    boxShadow: '4px 4px 0px #111',
+                }}
+            >
+                <FaPlay className="text-[#111] text-sm pl-0.5" />
+            </button>
+            <button
+                onClick={() => window.open('https://dokulens.github.io/', '_blank', 'noopener')}
+                title="Dokulens"
+                className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+                style={{
+                    background: '#A855F7',
+                    border: '3px solid #111',
+                    boxShadow: '4px 4px 0px #111',
+                }}
+            >
+                <FaFileAlt className="text-white text-sm" />
+            </button>
+        </div>
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
             {/* Song selection popup */}
             <div className="relative w-full flex flex-col items-end">
