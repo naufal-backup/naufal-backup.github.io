@@ -86,5 +86,13 @@
         "stack": "Next.js, Tailwind CSS",
         "url": "https://hemamayu.com",
         "image": "/images/hamemayu.webp"
+    },
+    {
+        "id": 12,
+        "title": "Kopi & Roti",
+        "description": "Landing page cafe — kopi segar, roti baru setiap hari, dengan menu, promo spesial, dan jam buka",
+        "stack": "Next.js, Javascript, CSS",
+        "url": "https://cafe-landing-big.pages.dev/",
+        "image": "/images/kopi-roti.webp"
     }
 ]
