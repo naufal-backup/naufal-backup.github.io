@@ -1,11 +1,7 @@
 import { useState } from "react";
-import { FaGithub, FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import { FaGithub, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTiktok } from "react-icons/fa";
 import WavyText from '../components/WavyText';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '../components/ScrollReveal';
-
-const WA_NUMBER = "628138187989";
-const WA_GENERAL = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Halo, saya mau konsultasi tentang pembuatan website.")}`;
-const EMAIL = "naufalalamsyah453@gmail.com";
 
 const socialLinks = [
     { name: "GitHub", url: "#", icon: <FaGithub /> },
@@ -21,19 +17,10 @@ export default function FourthSection() {
     const [showSecretPopup, setShowSecretPopup] = useState(false);
     const [secretInput, setSecretInput] = useState("");
     const [secretResult, setSecretResult] = useState(null); // null | 'success' | 'error'
-    const [formName, setFormName] = useState("");
-    const [formNeed, setFormNeed] = useState("");
-    const [formBudget, setFormBudget] = useState("< Rp 1 juta");
 
 
     const toggleGithubPopup = () => {
         setShowGithubPopup(!showGithubPopup);
-    };
-
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        const text = `Halo, saya ${formName || "(nama)"}.\nKebutuhan: ${formNeed || "(belum diisi)"}\nBudget kasar: ${formBudget}`;
-        window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
     };
 
     return (
@@ -45,71 +32,9 @@ export default function FourthSection() {
                         </h2>
                     </ScrollReveal>
                     <ScrollReveal animation="fadeUp" delay={0.1}>
-                        <p className="text-lg text-[#a0a0a0] mb-8 max-w-2xl mx-auto">
-                            <WavyText text="Butuh website untuk usaha? Konsultasi gratis via WhatsApp." />
+                        <p className="text-lg text-[#a0a0a0] mb-12 max-w-2xl mx-auto">
+                            <WavyText text="Feel free to reach out for collaborations, opportunities, or just to say hello!" />
                         </p>
-                    </ScrollReveal>
-                    <ScrollReveal animation="fadeUp" delay={0.15}>
-                        <div className="flex flex-wrap justify-center gap-4 mb-12">
-                            <a
-                                href={WA_GENERAL}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-[#22c55e] hover:bg-[#16a34a] transition-colors rounded-lg text-white font-medium"
-                            >
-                                <FaWhatsapp className="text-xl" />
-                                Chat WhatsApp
-                            </a>
-                            <a
-                                href={`mailto:${EMAIL}`}
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] hover:bg-[#242424] border border-[#2a2a2a] transition-colors rounded-lg text-[#f5f5f5] font-medium"
-                            >
-                                {EMAIL}
-                            </a>
-                        </div>
-                    </ScrollReveal>
-                    <ScrollReveal animation="fadeUp" delay={0.2}>
-                        <form
-                            onSubmit={handleFormSubmit}
-                            className="max-w-2xl mx-auto mb-12 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 text-left"
-                        >
-                            <h3 className="text-lg font-semibold text-[#f5f5f5] mb-4 text-center">
-                                Form kontak cepat
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <input
-                                    type="text"
-                                    value={formName}
-                                    onChange={(e) => setFormName(e.target.value)}
-                                    placeholder="Nama"
-                                    className="w-full p-3 rounded-lg bg-[#0f0f0f] text-[#f5f5f5] border border-[#2a2a2a] focus:outline-none focus:ring-2 focus:ring-[#4a9eff] placeholder-[#808080]"
-                                />
-                                <select
-                                    value={formBudget}
-                                    onChange={(e) => setFormBudget(e.target.value)}
-                                    className="w-full p-3 rounded-lg bg-[#0f0f0f] text-[#f5f5f5] border border-[#2a2a2a] focus:outline-none focus:ring-2 focus:ring-[#4a9eff]"
-                                >
-                                    <option value="< Rp 1 juta">Budget: &lt; Rp 1 juta</option>
-                                    <option value="Rp 1–3 juta">Budget: Rp 1–3 juta</option>
-                                    <option value="Rp 3–10 juta">Budget: Rp 3–10 juta</option>
-                                    <option value="> Rp 10 juta">Budget: &gt; Rp 10 juta</option>
-                                    <option value="Belum tahu, minta saran">Belum tahu, minta saran</option>
-                                </select>
-                            </div>
-                            <textarea
-                                value={formNeed}
-                                onChange={(e) => setFormNeed(e.target.value)}
-                                placeholder="Ceritakan kebutuhan website Anda…"
-                                rows={3}
-                                className="w-full p-3 rounded-lg bg-[#0f0f0f] text-[#f5f5f5] border border-[#2a2a2a] focus:outline-none focus:ring-2 focus:ring-[#4a9eff] placeholder-[#808080] mb-4"
-                            />
-                            <button
-                                type="submit"
-                                className="w-full p-3 rounded-lg bg-[#4a9eff] text-white font-semibold hover:bg-[#3d8ae6] transition-colors"
-                            >
-                                Kirim via WhatsApp
-                            </button>
-                        </form>
                     </ScrollReveal>
                     <StaggerContainer className="flex flex-wrap justify-center gap-6 mb-12" staggerDelay={0.12}>
                         {socialLinks.map((link) => (
