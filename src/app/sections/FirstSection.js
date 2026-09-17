@@ -1,42 +1,18 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaChevronDown, FaDownload, FaRegWindowClose } from 'react-icons/fa';
-import dynamic from 'next/dynamic';
+import { FaChevronDown, FaDownload, FaWhatsapp } from 'react-icons/fa';
+import Link from 'next/link';
 import WavyText from '../components/WavyText';
-const PDFViewer = dynamic(() => import('../portfolio/[slug]/PDFViewer'), { ssr: false });
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
+const WA_NUMBER = '628138187989';
+const WA_CTA = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Halo, saya mau konsultasi gratis tentang pembuatan website.')}`;
 const cvPath = '/documents/CV-1.pdf';
 
 export default function FirstSection() {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [showCV, setShowCV] = useState(false);
-    const [cvBlobUrl, setCvBlobUrl] = useState(null);
-    // Prefetch PDF as blob for instant open
-    useEffect(() => {
-        let revoked = false;
-        fetch(cvPath)
-            .then(res => res.blob())
-            .then(blob => {
-                if (!revoked) {
-                    setCvBlobUrl(URL.createObjectURL(blob));
-                }
-            });
-        return () => {
-            revoked = true;
-            setCvBlobUrl(url => {
-                if (url) URL.revokeObjectURL(url);
-                return null;
-            });
-        };
-    }, []);
-
-    // Helper: detect mobile
-    function isMobile() {
-        if (typeof window === 'undefined') return false;
-        return window.innerWidth <= 768;
-    }
 
     return (
-            <section className="min-h-screen flex items-center justify-center px-6 md:px-12 bg-[#0a0a0a]">
+            <section className="min-h-screen flex items-center justify-center px-6 md:px-12 pt-24 pb-12 bg-[#0a0a0a]">
                 <div className="max-w-4xl w-full">
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
@@ -99,7 +75,7 @@ export default function FirstSection() {
                     </motion.p>
 
                     <motion.div
-                        className="mt-12 flex gap-4 items-center"
+                        className="mt-12 flex flex-wrap gap-4 items-center"
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -110,20 +86,23 @@ export default function FirstSection() {
                         >
                             View My Work
                         </a>
+                        <a
+                            href={WA_CTA}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-[#22c55e] hover:bg-[#16a34a] transition-all duration-300 rounded-lg text-white font-medium"
+                        >
+                            <FaWhatsapp className="text-xl" />
+                            Pesan Website
+                        </a>
                         <div className="inline-flex ml-2 rounded-lg overflow-hidden border border-[#2a2a2a]">
-                            <button
-                                onClick={() => {
-                                    if (isMobile()) {
-                                        window.open(cvBlobUrl || cvPath, '_blank', 'noopener');
-                                    } else {
-                                        setShowCV(true);
-                                    }
-                                }}
+                            <Link
+                                href="/resume"
                                 className="px-6 py-4 bg-[#1a1a1a] hover:bg-[#242424] text-[#f5f5f5] font-medium focus:outline-none transition-all duration-300 cursor-pointer "
                                 style={{ borderRight: '1px solid #2a2a2a' }}
                             >
                                 View CV
-                            </button>
+                            </Link>
                             <a
                                 href={cvPath}
                                 download
@@ -134,38 +113,6 @@ export default function FirstSection() {
                                 <FaDownload className="" />
                             </a>
                         </div>
-                        <AnimatePresence>
-                        {showCV && (
-                            <motion.div
-                                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.25 }}
-                            >
-                                <motion.div
-                                    className="bg-[#1a1a1a] rounded-lg p-4 max-w-3xl w-full relative border border-[#2a2a2a]"
-                                    initial={{ scale: 0.85, opacity: 0, y: 40 }}
-                                    animate={{ scale: 1, opacity: 1, y: 0 }}
-                                    exit={{ scale: 0.85, opacity: 0, y: 40 }}
-                                    transition={{ type: 'spring', stiffness: 260, damping: 22, duration: 0.35 }}
-                                >
-                                    <button
-                                        onClick={() => setShowCV(false)}
-                                        className="absolute top-2 right-2 text-[#a0a0a0] text-2xl font-bold hover:text-[#4a9eff] focus:outline-none"
-                                        aria-label="Close CV"
-                                    >
-                                        <FaRegWindowClose className="hover:scale-110 transition-transform" />
-                                        
-
-                                    </button>
-                                    <div className="overflow-auto max-h-[80vh] flex justify-center">
-                                        <PDFViewer file={cvBlobUrl || cvPath} />
-                                    </div>
-                                </motion.div>
-                            </motion.div>
-                        )}
-                        </AnimatePresence>
                     </motion.div>
                 </div>
             </section>
