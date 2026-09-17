@@ -17,30 +17,6 @@
     },
     {
         "id": 3,
-        "title": "DokuLens",
-        "description": "Studio Olah Dokumen & Gambar (100% Client-Side)",
-        "stack": "Javascript, HTML, CSS",
-        "url": "https://dokulens.github.io/",
-        "image": "/images/dokulens.png"
-    },
-    {
-        "id": 4,
-        "title": "Disbox-Web",
-        "description": "Discord-based file storage client Web",
-        "stack": "Javascript, Tailwind CSS",
-        "url": "https://disbox-web-e24.pages.dev/",
-        "image": "/images/Disbox-web.webp"
-    },
-    {
-        "id": 5,
-        "title": "GTK Theme Customizer",
-        "description": "GTK Window Customization",
-        "stack": "Javascript, GTK, Linux Shell Script",
-        "url": "https://github.com/naufal-backup/Gtk-Theme-Customizer",
-        "image": "/images/gtk-theme-customizer.webp"
-    },
-    {
-        "id": 6,
         "title": "This Page",
         "description": "Portfolio Website",
         "stack": "Next.js, Tailwind CSS, Framer Motion",
@@ -48,15 +24,7 @@
         "image": "/images/this-page.webp"
     },
     {
-        "id": 7,
-        "title": "Disbox",
-        "description": "Discord-based file storage client Desktop",
-        "stack": "Electron, Javascript, CSS",
-        "url": "https://github.com/naufal-backup/disbox-linux",
-        "image": "/images/disbox-linux.webp"
-    },
-    {
-        "id": 8,
+        "id": 4,
         "title": "Waste Sorter",
         "description": "Educational Game",
         "stack": "Unity2D",
@@ -64,7 +32,7 @@
         "image": "/images/waste-sorter.webp"
     },
     {
-        "id": 9,
+        "id": 5,
         "title": "InvenSync",
         "description": "Inventory Management System",
         "stack": "Javascript, Cloudflare Pages",
@@ -72,7 +40,7 @@
         "image": "/images/invensync.webp"
     },
     {
-        "id": 10,
+        "id": 6,
         "title": "PakanPro",
         "description": "Toko pakan ternak online dengan detail nutrisi transparan dan pemesanan khusus",
         "stack": "Next.js, Prisma, Cloudflare Workers, Supabase",
@@ -80,7 +48,7 @@
         "image": "/images/Pakanpro.webp"
     },
     {
-        "id": 11,
+        "id": 7,
         "title": "Hamemayu",
         "description": "Personal website for Public Speaking, Literasi & Pengembangan Diri",
         "stack": "Next.js, Tailwind CSS",
@@ -88,7 +56,7 @@
         "image": "/images/hamemayu.webp"
     },
     {
-        "id": 12,
+        "id": 8,
         "title": "Kopi & Roti",
         "description": "Landing page cafe — kopi segar, roti baru setiap hari, dengan menu, promo spesial, dan jam buka",
         "stack": "Next.js, Javascript, CSS",
@@ -96,11 +64,43 @@
         "image": "/images/kopi-roti.webp"
     },
     {
-        "id": 13,
+        "id": 9,
         "title": "Belle Salon",
         "description": "Landing page salon kecantikan — profil, layanan, tim, dan reservasi perawatan rambut, wajah, dan tubuh",
         "stack": "Next.js, Javascript, CSS",
         "url": "https://belle-salon-awj.pages.dev/",
         "image": "/images/belle-salon.webp"
+    },
+    {
+        "id": 10,
+        "title": "DokuLens",
+        "description": "Studio Olah Dokumen & Gambar (100% Client-Side)",
+        "stack": "Javascript, HTML, CSS",
+        "url": "https://dokulens.github.io/",
+        "image": "/images/dokulens.png"
+    },
+    {
+        "id": 11,
+        "title": "Disbox-Web",
+        "description": "Discord-based file storage client Web",
+        "stack": "Javascript, Tailwind CSS",
+        "url": "https://disbox-web-e24.pages.dev/",
+        "image": "/images/Disbox-web.webp"
+    },
+    {
+        "id": 12,
+        "title": "GTK Theme Customizer",
+        "description": "GTK Window Customization",
+        "stack": "Javascript, GTK, Linux Shell Script",
+        "url": "https://github.com/naufal-backup/Gtk-Theme-Customizer",
+        "image": "/images/gtk-theme-customizer.webp"
+    },
+    {
+        "id": 13,
+        "title": "Disbox",
+        "description": "Discord-based file storage client Desktop",
+        "stack": "Electron, Javascript, CSS",
+        "url": "https://github.com/naufal-backup/disbox-linux",
+        "image": "/images/disbox-linux.webp"
     }
 ]
