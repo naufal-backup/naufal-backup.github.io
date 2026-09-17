@@ -33,6 +33,14 @@
     },
     {
         "id": 5,
+        "title": "Bengkel",
+        "description": "Landing page bengkel kendaraan — profil, layanan servis, mekanik, dan kontak",
+        "stack": "Next.js, Javascript, CSS",
+        "url": "https://bengkel-garage.pages.dev/",
+        "image": "/images/bengkel-garage.webp"
+    },
+    {
+        "id": 6,
         "title": "Hamemayu",
         "description": "Personal website for Public Speaking, Literasi & Pengembangan Diri",
         "stack": "Next.js, Tailwind CSS",
@@ -40,7 +48,7 @@
         "image": "/images/hamemayu.webp"
     },
     {
-        "id": 6,
+        "id": 7,
         "title": "Alternate Arc Archive",
         "description": "Fan-made website for Alternate Arc",
         "stack": "Laravel, MySQL, Bootstrap",
@@ -48,7 +56,7 @@
         "image": "/images/alternate-arc-archive.webp"
     },
     {
-        "id": 7,
+        "id": 8,
         "title": "This Page",
         "description": "Portfolio Website",
         "stack": "Next.js, Tailwind CSS, Framer Motion",
@@ -56,7 +64,7 @@
         "image": "/images/this-page.webp"
     },
     {
-        "id": 8,
+        "id": 9,
         "title": "Waste Sorter",
         "description": "Educational Game",
         "stack": "Unity2D",
@@ -64,7 +72,7 @@
         "image": "/images/waste-sorter.webp"
     },
     {
-        "id": 9,
+        "id": 10,
         "title": "InvenSync",
         "description": "Inventory Management System",
         "stack": "Javascript, Cloudflare Pages",
@@ -72,7 +80,7 @@
         "image": "/images/invensync.webp"
     },
     {
-        "id": 10,
+        "id": 11,
         "title": "DokuLens",
         "description": "Studio Olah Dokumen & Gambar (100% Client-Side)",
         "stack": "Javascript, HTML, CSS",
@@ -80,7 +88,7 @@
         "image": "/images/dokulens.png"
     },
     {
-        "id": 11,
+        "id": 12,
         "title": "Disbox-Web",
         "description": "Discord-based file storage client Web",
         "stack": "Javascript, Tailwind CSS",
@@ -88,7 +96,7 @@
         "image": "/images/Disbox-web.webp"
     },
     {
-        "id": 12,
+        "id": 13,
         "title": "GTK Theme Customizer",
         "description": "GTK Window Customization",
         "stack": "Javascript, GTK, Linux Shell Script",
@@ -96,7 +104,7 @@
         "image": "/images/gtk-theme-customizer.webp"
     },
     {
-        "id": 13,
+        "id": 14,
         "title": "Disbox",
         "description": "Discord-based file storage client Desktop",
         "stack": "Electron, Javascript, CSS",
