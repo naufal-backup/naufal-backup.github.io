@@ -94,5 +94,13 @@
         "stack": "Next.js, Javascript, CSS",
         "url": "https://cafe-landing-big.pages.dev/",
         "image": "/images/kopi-roti.webp"
+    },
+    {
+        "id": 13,
+        "title": "Belle Salon",
+        "description": "Landing page salon kecantikan — profil, layanan, tim, dan reservasi perawatan rambut, wajah, dan tubuh",
+        "stack": "Next.js, Javascript, CSS",
+        "url": "https://belle-salon-awj.pages.dev/",
+        "image": "/images/belle-salon.webp"
     }
 ]
