@@ -1,14 +1,6 @@
 [
     {
         "id": 1,
-        "title": "Alternate Arc Archive",
-        "description": "Fan-made website for Alternate Arc",
-        "stack": "Laravel, MySQL, Bootstrap",
-        "url": "https://github.com/naufal-backup/Alternate-Arc-Archive3",
-        "image": "/images/alternate-arc-archive.webp"
-    },
-    {
-        "id": 2,
         "title": "Ruang Santri",
         "description": "Website for Education",
         "stack": "Laravel, MySQL, Bootstrap, Tailwind CSS",
@@ -16,31 +8,7 @@
         "image": "/images/ruang-santri.webp"
     },
     {
-        "id": 3,
-        "title": "This Page",
-        "description": "Portfolio Website",
-        "stack": "Next.js, Tailwind CSS, Framer Motion",
-        "url": "https://naufal-backup.github.io",
-        "image": "/images/this-page.webp"
-    },
-    {
-        "id": 4,
-        "title": "Waste Sorter",
-        "description": "Educational Game",
-        "stack": "Unity2D",
-        "url": "https://github.com/naufal-backup/Waste-Sorter",
-        "image": "/images/waste-sorter.webp"
-    },
-    {
-        "id": 5,
-        "title": "InvenSync",
-        "description": "Inventory Management System",
-        "stack": "Javascript, Cloudflare Pages",
-        "url": "https://invensync.pages.dev/",
-        "image": "/images/invensync.webp"
-    },
-    {
-        "id": 6,
+        "id": 2,
         "title": "PakanPro",
         "description": "Toko pakan ternak online dengan detail nutrisi transparan dan pemesanan khusus",
         "stack": "Next.js, Prisma, Cloudflare Workers, Supabase",
@@ -48,15 +16,7 @@
         "image": "/images/Pakanpro.webp"
     },
     {
-        "id": 7,
-        "title": "Hamemayu",
-        "description": "Personal website for Public Speaking, Literasi & Pengembangan Diri",
-        "stack": "Next.js, Tailwind CSS",
-        "url": "https://hemamayu.com",
-        "image": "/images/hamemayu.webp"
-    },
-    {
-        "id": 8,
+        "id": 3,
         "title": "Kopi & Roti",
         "description": "Landing page cafe — kopi segar, roti baru setiap hari, dengan menu, promo spesial, dan jam buka",
         "stack": "Next.js, Javascript, CSS",
@@ -64,12 +24,52 @@
         "image": "/images/kopi-roti.webp"
     },
     {
-        "id": 9,
+        "id": 4,
         "title": "Belle Salon",
         "description": "Landing page salon kecantikan — profil, layanan, tim, dan reservasi perawatan rambut, wajah, dan tubuh",
         "stack": "Next.js, Javascript, CSS",
         "url": "https://belle-salon-awj.pages.dev/",
         "image": "/images/belle-salon.webp"
+    },
+    {
+        "id": 5,
+        "title": "Hamemayu",
+        "description": "Personal website for Public Speaking, Literasi & Pengembangan Diri",
+        "stack": "Next.js, Tailwind CSS",
+        "url": "https://hemamayu.com",
+        "image": "/images/hamemayu.webp"
+    },
+    {
+        "id": 6,
+        "title": "Alternate Arc Archive",
+        "description": "Fan-made website for Alternate Arc",
+        "stack": "Laravel, MySQL, Bootstrap",
+        "url": "https://github.com/naufal-backup/Alternate-Arc-Archive3",
+        "image": "/images/alternate-arc-archive.webp"
+    },
+    {
+        "id": 7,
+        "title": "This Page",
+        "description": "Portfolio Website",
+        "stack": "Next.js, Tailwind CSS, Framer Motion",
+        "url": "https://naufal-backup.github.io",
+        "image": "/images/this-page.webp"
+    },
+    {
+        "id": 8,
+        "title": "Waste Sorter",
+        "description": "Educational Game",
+        "stack": "Unity2D",
+        "url": "https://github.com/naufal-backup/Waste-Sorter",
+        "image": "/images/waste-sorter.webp"
+    },
+    {
+        "id": 9,
+        "title": "InvenSync",
+        "description": "Inventory Management System",
+        "stack": "Javascript, Cloudflare Pages",
+        "url": "https://invensync.pages.dev/",
+        "image": "/images/invensync.webp"
     },
     {
         "id": 10,
