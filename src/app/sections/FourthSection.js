@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { FaGithub, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTiktok } from "react-icons/fa";
 import WavyText from '../components/WavyText';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '../components/ScrollReveal';
@@ -60,8 +61,9 @@ export default function FourthSection() {
                         ))}
                     </StaggerContainer>
 
-                    {/* GitHub Popup */}
-                    {showGithubPopup && (
+                    {/* GitHub Popup — portal ke document.body agar fixed inset-0
+                        selalu relatif ke viewport (bukan ke ancestor ber-transform) */}
+                    {showGithubPopup && createPortal(
                         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm" onClick={toggleGithubPopup}>
                             <div className="bg-[#1a1a1a] p-8 rounded-xl max-w-sm w-full mx-4 relative border border-[#2a2a2a]" onClick={e => e.stopPropagation()}>
                                 <button
@@ -99,7 +101,8 @@ export default function FourthSection() {
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div>,
+                        document.body
                     )}
                                         <ScrollReveal animation="fadeUp" delay={0.3}>
                                             <div className="text-[#808080] text-sm mt-4 select-text">
@@ -111,8 +114,8 @@ export default function FourthSection() {
                                                 </p>
                                             </div>
                                         </ScrollReveal>
-                                        {/* Secret Popup */}
-                                        {showSecretPopup && (
+                                        {/* Secret Popup — portal juga (alasan sama seperti popup GitHub) */}
+                                        {showSecretPopup && createPortal(
                                             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm" onClick={() => {
                                                 setShowSecretPopup(false);
                                                 setSecretResult(null);
@@ -169,7 +172,8 @@ export default function FourthSection() {
                                                         <div className="text-[#f87171] text-center font-semibold">Input salah. Coba lagi.</div>
                                                     )}
                                                 </div>
-                                            </div>
+                                            </div>,
+                                            document.body
                                         )}
                 </div>
         </section>

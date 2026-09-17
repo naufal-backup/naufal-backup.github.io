@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { createPortal } from 'react-dom';
 import { FaChevronDown, FaDownload, FaRegWindowClose } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 import WavyText from '../components/WavyText';
@@ -135,7 +136,7 @@ export default function FirstSection() {
                             </a>
                         </div>
                         <AnimatePresence>
-                        {showCV && (
+                        {showCV && createPortal(
                             <motion.div
                                 className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80"
                                 initial={{ opacity: 0 }}
@@ -163,7 +164,8 @@ export default function FirstSection() {
                                         <PDFViewer file={cvBlobUrl || cvPath} />
                                     </div>
                                 </motion.div>
-                            </motion.div>
+                            </motion.div>,
+                            document.body
                         )}
                         </AnimatePresence>
                     </motion.div>
