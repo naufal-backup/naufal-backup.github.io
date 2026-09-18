@@ -135,7 +135,9 @@ export default function FirstSection() {
                                 <FaDownload className="" />
                             </a>
                         </div>
-                        <AnimatePresence>
+                        {/* Catatan: modal di-portal ke document.body (lihat popup GitHub di
+                            FourthSection) dan TIDAK dibungkus AnimatePresence — AnimatePresence
+                            tidak me-render portal child sehingga modal tidak pernah muncul. */}
                         {showCV && createPortal(
                             <motion.div
                                 className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80"
@@ -167,7 +169,6 @@ export default function FirstSection() {
                             </motion.div>,
                             document.body
                         )}
-                        </AnimatePresence>
                     </motion.div>
                 </div>
             </section>
