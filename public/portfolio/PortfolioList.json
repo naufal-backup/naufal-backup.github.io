@@ -9,6 +9,14 @@
     },
     {
         "id": 2,
+        "title": "Yayasan Peduli Kasih",
+        "description": "Website yayasan — profil, program, galeri, donasi, dan kontak",
+        "stack": "Javascript, HTML, CSS",
+        "url": "https://yayasan-peduli-kasih.alamsyahnaufal453.workers.dev/",
+        "image": "/images/yayasan-peduli-kasih.webp"
+    },
+    {
+        "id": 3,
         "title": "PakanPro",
         "description": "Toko pakan ternak online dengan detail nutrisi transparan dan pemesanan khusus",
         "stack": "Next.js, Prisma, Cloudflare Workers, Supabase",
@@ -16,7 +24,7 @@
         "image": "/images/Pakanpro.webp"
     },
     {
-        "id": 3,
+        "id": 4,
         "title": "Kopi & Roti",
         "description": "Landing page cafe — kopi segar, roti baru setiap hari, dengan menu, promo spesial, dan jam buka",
         "stack": "Next.js, Javascript, CSS",
@@ -24,7 +32,7 @@
         "image": "/images/kopi-roti.webp"
     },
     {
-        "id": 4,
+        "id": 5,
         "title": "Belle Salon",
         "description": "Landing page salon kecantikan — profil, layanan, tim, dan reservasi perawatan rambut, wajah, dan tubuh",
         "stack": "Next.js, Javascript, CSS",
@@ -32,7 +40,7 @@
         "image": "/images/belle-salon.webp"
     },
     {
-        "id": 5,
+        "id": 6,
         "title": "Bengkel",
         "description": "Landing page bengkel kendaraan — profil, layanan servis, mekanik, dan kontak",
         "stack": "Next.js, Javascript, CSS",
@@ -40,20 +48,12 @@
         "image": "/images/bengkel-garage.webp"
     },
     {
-        "id": 6,
+        "id": 7,
         "title": "Hamemayu",
         "description": "Personal website for Public Speaking, Literasi & Pengembangan Diri",
         "stack": "Next.js, Tailwind CSS",
         "url": "https://hemamayu.com",
         "image": "/images/hamemayu.webp"
-    },
-    {
-        "id": 7,
-        "title": "Yayasan Peduli Kasih",
-        "description": "Website yayasan — profil, program, galeri, donasi, dan kontak",
-        "stack": "Javascript, HTML, CSS",
-        "url": "https://yayasan-peduli-kasih.alamsyahnaufal453.workers.dev/",
-        "image": "/images/yayasan-peduli-kasih.webp"
     },
     {
         "id": 8,
