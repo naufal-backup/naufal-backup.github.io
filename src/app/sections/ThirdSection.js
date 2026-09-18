@@ -43,7 +43,7 @@ const CardContent = ({ item, showDescription }) => {
     const stackList = item.stack ? item.stack.split(',').map(s => s.trim()) : [];
     
     return (
-        <div className="bg-[#1a1a1a] rounded-lg p-6 h-full flex flex-col w-full border border-[#2a2a2a]">
+        <div className="bg-[#1a1a1a] rounded-lg p-6 h-full flex flex-col w-full border border-[#2a2a2a] transition-shadow duration-300 hover:shadow-[0_10px_40px_rgba(74,158,255,0.25)]">
             <div className="aspect-video bg-[#0f0f0f] rounded-md mb-4 flex items-center justify-center text-4xl overflow-hidden shrink-0">
                 {item.image ? (
                     <img

@@ -65,14 +65,6 @@
     },
     {
         "id": 9,
-        "title": "This Page",
-        "description": "Portfolio Website",
-        "stack": "Next.js, Tailwind CSS, Framer Motion",
-        "url": "https://naufal-backup.github.io",
-        "image": "/images/this-page.webp"
-    },
-    {
-        "id": 10,
         "title": "Waste Sorter",
         "description": "Educational Game",
         "stack": "Unity2D",
@@ -80,7 +72,7 @@
         "image": "/images/waste-sorter.webp"
     },
     {
-        "id": 11,
+        "id": 10,
         "title": "InvenSync",
         "description": "Inventory Management System",
         "stack": "Javascript, Cloudflare Pages",
@@ -88,7 +80,7 @@
         "image": "/images/invensync.webp"
     },
     {
-        "id": 12,
+        "id": 11,
         "title": "DokuLens",
         "description": "Studio Olah Dokumen & Gambar (100% Client-Side)",
         "stack": "Javascript, HTML, CSS",
@@ -96,7 +88,7 @@
         "image": "/images/dokulens.png"
     },
     {
-        "id": 13,
+        "id": 12,
         "title": "Disbox-Web",
         "description": "Discord-based file storage client Web",
         "stack": "Javascript, Tailwind CSS",
@@ -104,7 +96,7 @@
         "image": "/images/Disbox-web.webp"
     },
     {
-        "id": 14,
+        "id": 13,
         "title": "GTK Theme Customizer",
         "description": "GTK Window Customization",
         "stack": "Javascript, GTK, Linux Shell Script",
@@ -112,7 +104,7 @@
         "image": "/images/gtk-theme-customizer.webp"
     },
     {
-        "id": 15,
+        "id": 14,
         "title": "Disbox",
         "description": "Discord-based file storage client Desktop",
         "stack": "Electron, Javascript, CSS",
