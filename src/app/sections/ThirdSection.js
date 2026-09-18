@@ -189,7 +189,7 @@ export default function ThirdSection({ portfolioItems }) {
                                 <WavyText text="Live Preview" />
                             </h3>
                         </ScrollReveal>
-                        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" staggerDelay={0.1}>
+                        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6" staggerDelay={0.1}>
                             {livePreviewItems.map((item) => (
                                 <StaggerItem key={item.id} animation="slideRotate">
                                     <PortfolioCard 
